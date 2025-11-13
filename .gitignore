@@ -1,6 +1,12 @@
-pwtk-3.2/
-pwtk-3.2.tar.gz
-pwtk.tar.gz
-tcllib-1.21/
-tcllib-1.21.tar.gz
+# Build outputs
+artifacts/q-e-*
+qe_macm4_attempt_bundle*.zip
+pwtk-*
+*.tar.gz
+cases/si/manual/tmp/
 cases/si/pwtk/tmp/
+*.pyc
+__pycache__/
+
+tmp_smoke.out
+external/

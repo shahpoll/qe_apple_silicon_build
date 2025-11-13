@@ -1,6 +1,6 @@
 ### Running on host: Pollobs-Mac-mini.local
 
-     Program PWSCF v.7.4.1 starts on  1Nov2025 at  0:37:33 
+     Program PWSCF v.7.4.1 starts on  1Nov2025 at 14:17:14 
 
      This program is part of the open-source Quantum ESPRESSO suite
      for quantum simulation of materials; please cite
@@ -35,9 +35,9 @@
      Parallelization info
      --------------------
      sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
-     Min         216     216     69                 2980     2980     533
-     Max         217     217     70                 2981     2981     534
-     Sum         433     433    139                 5961     5961    1067
+     Min         429     216     69                 8432     2980     533
+     Max         430     217     70                 8433     2981     534
+     Sum         859     433    139                16865     5961    1067
 
      Using Slab Decomposition
 
@@ -51,7 +51,7 @@
      number of electrons       =         8.00
      number of Kohn-Sham states=            8
      kinetic-energy cutoff     =      30.0000  Ry
-     charge density cutoff     =     120.0000  Ry
+     charge density cutoff     =     240.0000  Ry
      Exchange-correlation= PBE
                            (   1   4   3   4   0   0   0)
 
@@ -70,7 +70,7 @@
 
 
      PseudoPot. # 1 for Si read from file:
-     /Users/pollob/qe_macm4_build/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF
+     /Users/pollob/qe_macm4_build/cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF
      MD5 check sum: fa25574f73a70a4139f2adfbefec430c
      Pseudo is Ultrasoft + core correction, Zval =  4.0
      Generated using &quot;atomic&quot; code by A. Dal Corso  v.6.3
@@ -101,13 +101,13 @@
 
      Number of k-points >= 100: set verbosity='high' to print them.
 
-     Dense  grid:     5961 G-vectors     FFT dimensions: (  32,  32,  32)
+     Dense  grid:    16865 G-vectors     FFT dimensions: (  36,  36,  36)
 
-     Estimated max dynamical RAM per process >      11.15 MB
+     Smooth grid:     5961 G-vectors     FFT dimensions: (  32,  32,  32)
 
-     Estimated total dynamical RAM >      22.29 MB
+     Estimated max dynamical RAM per process >      28.39 MB
 
-     Check: negative core charge=   -0.000004
+     Estimated total dynamical RAM >      56.78 MB
 
      The potential is recalculated from file :
      ./tmp/silicon.save/charge-density
@@ -117,11 +117,10 @@
      Band Structure Calculation
      Davidson diagonalization with overlap
      c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
 
-     ethr =  1.25E-10,  avg # of iterations = 34.5
+     ethr =  1.25E-10,  avg # of iterations = 34.4
 
-     total cpu time spent up to now is        5.6 secs
+     total cpu time spent up to now is        5.7 secs
 
      End of band structure calculation
 
@@ -130,46 +129,48 @@
      Writing all to output data dir ./tmp/silicon.save/ :
      XML data file, pseudopotentials, collected wavefunctions
 
-     init_run     :      0.05s CPU      0.05s WALL (       1 calls)
-     electrons    :      5.14s CPU      5.52s WALL (       1 calls)
+     init_run     :      0.08s CPU      0.08s WALL (       1 calls)
+     electrons    :      5.26s CPU      5.57s WALL (       1 calls)
 
      Called by init_run:
      wfcinit      :      0.00s CPU      0.00s WALL (       1 calls)
      potinit      :      0.00s CPU      0.00s WALL (       1 calls)
-     hinit0       :      0.04s CPU      0.04s WALL (       1 calls)
+     hinit0       :      0.05s CPU      0.05s WALL (       1 calls)
 
      Called by electrons:
-     c_bands      :      5.14s CPU      5.52s WALL (       1 calls)
+     c_bands      :      5.26s CPU      5.57s WALL (       1 calls)
      v_of_rho     :      0.00s CPU      0.00s WALL (       1 calls)
-     newd         :      0.00s CPU      0.00s WALL (       1 calls)
+     newd         :      0.01s CPU      0.01s WALL (       1 calls)
 
      Called by c_bands:
      init_us_2    :      0.01s CPU      0.01s WALL (     201 calls)
-     cegterg      :      4.92s CPU      5.27s WALL (     456 calls)
+     cegterg      :      5.04s CPU      5.32s WALL (     456 calls)
 
      Called by *egterg:
-     cdiaghg      :      0.25s CPU      0.25s WALL (    7133 calls)
-     h_psi        :      3.99s CPU      4.20s WALL (    7589 calls)
-     s_psi        :      0.16s CPU      0.18s WALL (    7589 calls)
-     g_psi        :      0.02s CPU      0.02s WALL (    6932 calls)
+     cdiaghg      :      0.26s CPU      0.26s WALL (    7120 calls)
+     h_psi        :      4.15s CPU      4.34s WALL (    7576 calls)
+     s_psi        :      0.16s CPU      0.17s WALL (    7576 calls)
+     g_psi        :      0.02s CPU      0.02s WALL (    6919 calls)
 
      Called by h_psi:
-     h_psi:calbec :      0.22s CPU      0.28s WALL (    7589 calls)
-     vloc_psi     :      3.59s CPU      3.71s WALL (    7589 calls)
-     add_vuspsi   :      0.18s CPU      0.19s WALL (    7589 calls)
+     h_psi:calbec :      0.21s CPU      0.24s WALL (    7576 calls)
+     vloc_psi     :      3.75s CPU      3.89s WALL (    7576 calls)
+     add_vuspsi   :      0.18s CPU      0.19s WALL (    7576 calls)
 
      General routines
-     calbec       :      0.21s CPU      0.27s WALL (    7589 calls)
-     fft          :      0.00s CPU      0.00s WALL (      12 calls)
-     fftw         :      3.16s CPU      3.26s WALL (   82018 calls)
+     calbec       :      0.20s CPU      0.23s WALL (    7576 calls)
+     fft          :      0.00s CPU      0.00s WALL (      13 calls)
+     ffts         :      0.00s CPU      0.00s WALL (       1 calls)
+     fftw         :      3.24s CPU      3.36s WALL (   81984 calls)
+     interpolate  :      0.00s CPU      0.00s WALL (       1 calls)
      davcio       :      0.00s CPU      0.00s WALL (     402 calls)
 
      Parallel routines
 
-     PWSCF        :      5.26s CPU      5.67s WALL
+     PWSCF        :      5.44s CPU      5.79s WALL
 
 
-   This run was terminated on:   0:37:38   1Nov2025            
+   This run was terminated on:  14:17:20   1Nov2025            
 
 =------------------------------------------------------------------------------=
    JOB DONE.

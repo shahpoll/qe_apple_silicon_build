@@ -2,12 +2,13 @@
    calculation = 'scf'
    outdir      = './tmp'
    prefix      = 'silicon'
-   pseudo_dir  = '/Users/pollob/qe_macm4_build/pp'
+   pseudo_dir  = '../../common/pp'
  /
 
  &SYSTEM
    celldm(1)   = 10.26
    degauss     = 0.02
+   ecutrho     = 240.0
    ecutwfc     = 30.0
    ibrav       = 2
    nat         = 2
@@ -29,7 +30,6 @@ ATOMIC_POSITIONS crystal
   Si       0.250000000000   0.250000000000   0.250000000000
 
 K_POINTS automatic
-  6   6   6   0   0   0 
-
+  8   8   8   0   0   0 
 
 

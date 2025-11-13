@@ -2,12 +2,13 @@
    calculation = 'bands'
    outdir      = './tmp'
    prefix      = 'silicon'
-   pseudo_dir  = '/Users/pollob/qe_macm4_build/pp'
+   pseudo_dir  = '../../common/pp'
  /
 
  &SYSTEM
    celldm(1)   = 10.26
    degauss     = 0.02
+   ecutrho     = 240.0
    ecutwfc     = 30.0
    ibrav       = 2
    nat         = 2
@@ -36,6 +37,5 @@ K_POINTS crystal_b
    0.375    0.375    0.75   40 
    0.0    0.0    0.0   40 
    0.5    0.5    0.5   40 
-
 
 

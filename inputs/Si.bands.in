@@ -1,8 +1,8 @@
 &control
-  calculation='bands', prefix='silicon', pseudo_dir='./pp', outdir='./tmp'
+  calculation='bands', prefix='silicon', pseudo_dir='../cases/common/pp', outdir='./tmp'
 /
 &system
-  ibrav= 2, celldm(1)=10.26, nat=2, ntyp=1, ecutwfc=30.0,
+  ibrav= 2, celldm(1)=10.26, nat=2, ntyp=1, ecutwfc=30.0, ecutrho=240.0,
   occupations='smearing', smearing='mp', degauss=0.02
 /
 &electrons

@@ -1,0 +1,3 @@
+&bands
+  prefix='kmesh_8', outdir='./tmp_kmesh_8', filband='silicon.bands.dat'
+/

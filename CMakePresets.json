@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "openblas-release",
+      "displayName": "OpenBLAS Release",
+      "description": "Build QE with OpenBLAS (Homebrew) and OpenMPI",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/openblas-release",
+      "cacheVariables": {
+        "QE_ENABLE_MPI": "ON",
+        "QE_ENABLE_OPENMP": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_Fortran_COMPILER": "mpif90",
+        "CMAKE_C_COMPILER": "mpicc",
+        "BLAS_LIBRARIES": "$(brew --prefix openblas)/lib/libopenblas.dylib",
+        "LAPACK_LIBRARIES": "$(brew --prefix openblas)/lib/libopenblas.dylib"
+      }
+    }
+  ]
+}

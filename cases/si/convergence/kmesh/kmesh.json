@@ -1,0 +1,42 @@
+[
+  {
+    "label": "kmesh_4",
+    "ecut": 30.0,
+    "ecutrho": 240.0,
+    "kmesh": 4.0,
+    "total_energy_meV_per_atom": -155287.2599910813,
+    "delta_energy_meV_per_atom": 86.40560656381422,
+    "gap_eV": 0.5563000000000002,
+    "delta_gap_meV": -16.200000000000436
+  },
+  {
+    "label": "kmesh_6",
+    "ecut": 30.0,
+    "ecutrho": 240.0,
+    "kmesh": 6.0,
+    "total_energy_meV_per_atom": -155366.68118316738,
+    "delta_energy_meV_per_atom": 6.9844144777162,
+    "gap_eV": 0.5700000000000003,
+    "delta_gap_meV": -2.500000000000391
+  },
+  {
+    "label": "kmesh_8",
+    "ecut": 30.0,
+    "ecutrho": 240.0,
+    "kmesh": 8.0,
+    "total_energy_meV_per_atom": -155372.0615544678,
+    "delta_energy_meV_per_atom": 1.6040431772999,
+    "gap_eV": 0.5720000000000001,
+    "delta_gap_meV": -0.5000000000006111
+  },
+  {
+    "label": "kmesh_10",
+    "ecut": 30.0,
+    "ecutrho": 240.0,
+    "kmesh": 10.0,
+    "total_energy_meV_per_atom": -155373.6655976451,
+    "delta_energy_meV_per_atom": 0.0,
+    "gap_eV": 0.5725000000000007,
+    "delta_gap_meV": 0.0
+  }
+]

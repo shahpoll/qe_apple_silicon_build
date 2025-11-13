@@ -3,4 +3,4 @@ Fermi level (from silicon.dos)  :   6.2200 eV
 Valence band maximum            :   6.2198 eV at k-index 0 (s = 0.0000)
 Conduction band minimum         :   6.7897 eV at k-index 34 (s = 0.8500)
 Indirect gap (Cmin - Vmax)      :   0.5699 eV
-Direct gap (min over k)         :   2.5598 eV at k-index 0 (s = 0.0000)
+Direct gap (min over k)         :   2.5599 eV at k-index 0 (s = 0.0000)

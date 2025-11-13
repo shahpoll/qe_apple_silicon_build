@@ -1,0 +1,3 @@
+&bands
+  prefix='cutoff_30', outdir='./tmp_cutoff_30', filband='silicon.bands.dat'
+/

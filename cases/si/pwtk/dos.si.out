@@ -1,6 +1,6 @@
 ### Running on host: Pollobs-Mac-mini.local
 
-     Program DOS v.7.4.1 starts on  1Nov2025 at  0:37:40 
+     Program DOS v.7.4.1 starts on  1Nov2025 at 14:17:22 
 
      This program is part of the open-source Quantum ESPRESSO suite
      for quantum simulation of materials; please cite
@@ -32,22 +32,20 @@
      Parallelization info
      --------------------
      sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
-     Min         216     216     69                 2980     2980     533
-     Max         217     217     70                 2981     2981     534
-     Sum         433     433    139                 5961     5961    1067
+     Min         429     216     69                 8432     2980     533
+     Max         430     217     70                 8433     2981     534
+     Sum         859     433    139                16865     5961    1067
 
      Using Slab Decomposition
 
 
-     Check: negative core charge=   -0.000004
-
      Gaussian broadening (read from file): ngauss,degauss=   1    0.020000
 
 
-     DOS          :      0.12s CPU      0.13s WALL
+     DOS          :      0.14s CPU      0.15s WALL
 
 
-   This run was terminated on:   0:37:40   1Nov2025            
+   This run was terminated on:  14:17:22   1Nov2025            
 
 =------------------------------------------------------------------------------=
    JOB DONE.

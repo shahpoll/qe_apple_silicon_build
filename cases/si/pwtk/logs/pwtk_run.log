@@ -4,9 +4,9 @@
       (for more info about PWTK, see http://pwtk.ijs.si/)
 
       Running on host: Pollobs-Mac-mini.local
-      PWTK: /Users/pollob/qe_macm4_build/pwtk-3.2
-      Date: Sat Nov 01 00:37:27 +06 2025
-      PID:  16565
+      PWTK: ../../../pwtk-3.2
+      Date: Sat Nov 01 14:17:03 +06 2025
+      PID:  5126
 
       Executable: /Users/pollob/qe_macm4_build/artifacts/q-e-qe-7.4.1/bin/pw.x
       Running: mpirun -n 2 pw.x -in pw.si.scf.in > pw.si.scf.out

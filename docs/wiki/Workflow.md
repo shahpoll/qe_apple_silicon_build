@@ -1,9 +1,8 @@
-# Workflow Recipes
+# Workflow Recipes (macOS 15.3 / M4)
 
-This page mirrors the commands logged in `docs/Si_Worklog.md`, focusing on the silicon validation path.
+Reference commands for the silicon validation case. Unless noted otherwise, run them from the repository root. New to QE? Start with `docs/Workflow_Basics.md` for a copy-paste friendly walkthrough, then come back here for the expanded recipe.
 
-## 1. Configure build (Accelerate + MPI)
-
+## 1. Configure QE (Accelerate + MPI)
 ```sh
 cd artifacts/q-e-qe-7.4.1
 ./configure MPIF90=mpif90 CC=mpicc CPP="gcc -E" \
@@ -11,68 +10,64 @@ cd artifacts/q-e-qe-7.4.1
   LAPACK_LIBS="-L$(brew --prefix veclibfort)/lib -lvecLibFort -framework Accelerate"
 make -j pw
 make -C PP/src bands.x dos.x projwfc.x
-cd ../../
+cd ../..
+```
+> `CPP="gcc -E"` is mandatory on Sequoia/CLT16 to avoid `laxlib_*.h` preprocessing failures.
+
+## 2. Place pseudopotentials
+```sh
+curl -L -o cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF \
+  https://pseudopotentials.quantum-espresso.org/upf_files/Si.pbe-n-rrkjus_psl.1.0.0.UPF
 ```
 
-> `CPP="gcc -E"` is the Sequoia-specific fix. The final `make -C PP/src …` pulls in the post-processing binaries used later.
-
-## 2. Silicon baseline (SCF)
-
+## 3. Manual silicon workflow (`cases/si/manual`)
 ```sh
-mpirun -n 2 artifacts/q-e-qe-7.4.1/bin/pw.x -in inputs/Si.scf.in \
-  | tee analysis/Si/logs/si_scf_attemptB2.txt
+cd cases/si/manual
+../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in     | tee logs/si_scf.txt
+../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in   | tee logs/si_bands_pw.txt
+../../../scripts/run_qe.sh bands.x -- -in data/Si.bands_post.in  | tee logs/si_bands_post.txt
+../../../scripts/run_qe.sh pw.x -- -in data/Si.nscf.in    | tee logs/si_nscf_pw.txt
+../../../scripts/run_qe.sh dos.x -- -in data/Si.dos.in    | tee logs/si_dos.txt
+../../../scripts/run_qe.sh projwfc.x -- -in data/Si.projwfc.in | tee logs/si_projwfc.txt
+
+python3 scripts/plot_bands.py
+python3 scripts/plot_dos.py
+python3 scripts/plot_pdos.py
+python3 scripts/analyze_bandgap.py
 ```
+Artifacts: `data/` holds QE outputs (`silicon.*`, `si_band_summary.txt`), `logs/` contains transcripts, `plots/` captures the rendered figures. SCF uses an 8×8×8 mesh; NSCF/PDOS uses 12×12×12 with `nbnd=36` and energies shifted so E = 0 is the DOS-derived Fermi level.
 
-Outputs: `tmp/silicon.save`, plus the transcript in `analysis/Si/logs/si_scf_attemptB2.txt`.
-
-## 3. Band structure path
-
+## 4. PWTK reproduction (`cases/si/pwtk`)
 ```sh
-mpirun -n 2 artifacts/q-e-qe-7.4.1/bin/pw.x -in inputs/Si.bands.in \
-  | tee analysis/Si/logs/si_bands_pw.txt
-artifacts/q-e-qe-7.4.1/bin/bands.x -in inputs/Si.bands_post.in \
-  | tee analysis/Si/logs/si_bands_post.txt
-python3 scripts/plot_si_bands.py
+cd ../../..
+scripts/setup/fetch_pwtk.sh  # one-time download
+export PATH="$PWD/external/pwtk-3.2:$PATH"
+cd cases/si/pwtk
+pwtk scripts/si_workflow.pwtk | tee logs/pwtk_run.log
+python3 scripts/plot_bands.py
+python3 scripts/plot_dos.py
+python3 scripts/plot_pdos.py
+python3 scripts/analyze_bandgap.py
 ```
+> Ensure `tclsh8.6` is available (`brew install tcl-tk@8`), add `external/pwtk-3.2` to `PATH`, and keep `cases/common/pp` on the PWTK `pseudo_dir`. To reuse the MPI wrapper, set `prefix /path/to/scripts/run_qe.sh` and optional `QE_RANKS`/`QE_CPUSET` lines in `~/.pwtk/pwtk.tcl`.
 
-Artifacts: `analysis/Si/data/silicon.bands.dat`, `.gnu`, and the plot `analysis/Si/plots/si_band_structure.png`.
-
-## 4. Dense DOS sampling
-
+## 5. Manual vs PWTK comparison (`cases/si/comparison`)
 ```sh
-mpirun -n 2 artifacts/q-e-qe-7.4.1/bin/pw.x -in inputs/Si.nscf.in \
-  | tee analysis/Si/logs/si_nscf_pw.txt
-artifacts/q-e-qe-7.4.1/bin/dos.x -in inputs/Si.dos.in \
-  | tee analysis/Si/logs/si_dos.txt
-python3 scripts/plot_si_dos.py
+cd ../comparison
+python3 scripts/compare_runs.py
 ```
+Produces `data/si_comparison.txt` and `plots/si_manual_vs_pwtk.png`.
 
-Artifacts: `analysis/Si/data/silicon.dos` and `analysis/Si/plots/si_total_dos.png`.
-
-## 5. Projected DOS (PDOS)
-
+## Optional: convergence scans (`cases/si/convergence`)
 ```sh
-artifacts/q-e-qe-7.4.1/bin/projwfc.x -in inputs/Si.projwfc.in \
-  | tee analysis/Si/logs/si_projwfc.txt
-python3 scripts/plot_si_pdos.py
+cd ../../cases/si/convergence
+python3 run_convergence.py
 ```
+Generates CSV/JSON tables and ΔE plots for the cutoff (30–60 Ry, dual = 8) and k-mesh (4×4×4 → 10×10×10) studies.
 
-Artifacts: `analysis/Si/data/silicon.pdos_*` plus `analysis/Si/plots/si_pdos.png`.
-
-## 6. Band-gap summary
-
+## Optional: CMake + OpenBLAS (still experimental)
 ```sh
-python3 scripts/analyze_si_bandgap.py
-```
-
-Artifact: `analysis/Si/data/si_band_summary.txt`, reporting indirect/direct gaps using the band data and Fermi level from `silicon.dos`.
-
-## Optional: CMake + OpenBLAS (experimental)
-
-Uses the same source tree (`artifacts/q-e-qe-7.4.1`) with FoX cloned in `external/fox/`. Caveat: ensure `target_compile_definitions(qe_xml PRIVATE __XML_STANDALONE)` is removed if you rely on FoX.
-
-```sh
-cd artifacts/q-e-qe-7.4.1
+cd ../../artifacts/q-e-qe-7.4.1
 OBLAS=$(brew --prefix openblas)
 cmake -S . -B buildA \
   -DCMAKE_Fortran_COMPILER=mpif90 \
@@ -83,5 +78,4 @@ cmake -S . -B buildA \
   -DLAPACK_LIBRARIES="$OBLAS/lib/libopenblas.dylib"
 cmake --build buildA --target pw -j
 ```
-
-> This configuration is left in the repo for parity with Linux builds but still needs the FoX toggle for wxml compilation.
+> Clone `external/fox` or disable `__XML_STANDALONE` to avoid `wxml` compilation failures.

@@ -1,9 +1,9 @@
 &control
-  calculation='nscf', prefix='silicon', pseudo_dir='./pp', outdir='./tmp'
+  calculation='nscf', prefix='silicon', pseudo_dir='../cases/common/pp', outdir='./tmp'
 /
 &system
   ibrav= 2, celldm(1)=10.26, nat=2, ntyp=1,
-  ecutwfc=30.0, occupations='fixed', nbnd=16
+  ecutwfc=30.0, ecutrho=240.0, occupations='fixed', nbnd=36
 /
 &electrons
   conv_thr=1.0d-10

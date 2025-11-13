@@ -1,10 +1,11 @@
  &DOS
-   DeltaE = 0.02
-   Emax   = 20.0
-   Emin   = -15.0
-   fildos = 'silicon.dos'
-   outdir = './tmp'
-   prefix = 'silicon'
- /
-
+ DeltaE = 0.02
+  Emax   = 20.0
+  Emin   = -15.0
+  fildos = 'silicon.dos'
+  outdir = './tmp'
+  prefix = 'silicon'
+  ngauss = 0
+  degauss = 0.001470
+/
 

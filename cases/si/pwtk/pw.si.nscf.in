@@ -2,16 +2,17 @@
    calculation = 'nscf'
    outdir      = './tmp'
    prefix      = 'silicon'
-   pseudo_dir  = '/Users/pollob/qe_macm4_build/pp'
+   pseudo_dir  = '../../common/pp'
  /
 
  &SYSTEM
    celldm(1)   = 10.26
    degauss     = 0.02
+   ecutrho     = 240.0
    ecutwfc     = 30.0
    ibrav       = 2
    nat         = 2
-   nbnd        = 16
+   nbnd        = 36
    ntyp        = 1
    occupations = 'fixed'
    smearing    = 'mp'
@@ -31,6 +32,5 @@ ATOMIC_POSITIONS crystal
 
 K_POINTS automatic
   12   12   12   0   0   0 
-
 
 

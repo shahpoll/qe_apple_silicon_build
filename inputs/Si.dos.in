@@ -1,3 +1,4 @@
 &DOS
-  prefix='silicon', outdir='./tmp', Emin=-15.0, Emax=20.0, DeltaE=0.02
+  prefix='silicon', outdir='./tmp', Emin=-15.0, Emax=20.0, DeltaE=0.02,
+  ngauss=0, degauss=0.001470
 /

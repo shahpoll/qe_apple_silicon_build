@@ -5,7 +5,7 @@ This guide assumes a clean macOS 15.3 environment with Command Line Tools (CLT) 
 ## 1. Homebrew toolchain
 ```sh
 brew update
-brew install gcc open-mpi cmake veclibfort openblas wget python
+brew bundle
 ```
 
 Notes:
@@ -13,18 +13,21 @@ Notes:
 - Homebrew’s Python is optional but guarantees a recent `pip` for plotting utilities.
 
 ## 2. Workspace layout
-```sh
-mkdir -p docs logs artifacts scripts inputs pp analysis/Si/{data,logs,plots}
-```
-The repo already contains helper scripts and sample inputs; adjust paths if you are starting from scratch.
+
+The repository ships with a case-oriented layout:
+
+- `cases/common/pp` — shared pseudopotentials (PSLibrary ultrasoft Si is provided).
+- `cases/common/scripts` — reusable plotting/analysis helpers.
+- `cases/si/manual` — manual QE run (data, logs, plots, wrappers).
+- `cases/si/pwtk` — PWTK-driven reproduction of the manual run.
+- `cases/si/comparison` — overlays and diff metrics between the two workflows.
+
+If you are bootstrapping from scratch, create the directories above before populating them.
 
 ## 3. Fetch Quantum ESPRESSO
 If the `artifacts/q-e-qe-7.4.1` tree is absent:
 ```sh
-cd artifacts
-git clone --depth 1 --branch qe-7.4.1 https://gitlab.com/QEF/q-e.git q-e-qe-7.4.1
-rm -rf q-e-qe-7.4.1/.git  # treat as vendor drop
-cd ..
+scripts/setup/fetch_qe.sh qe-7.4.1
 ```
 
 ### (Optional) FoX XML library
@@ -48,36 +51,36 @@ The `CPP="gcc -E"` override avoids the header-mangling bug triggered by Apple’
 
 ## 5. Example pseudopotential and inputs
 ```sh
-curl -L -o pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF \
+curl -L -o cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF \
   https://pseudopotentials.quantum-espresso.org/upf_files/Si.pbe-n-rrkjus_psl.1.0.0.UPF
-cp inputs/Si.scf.in.template inputs/Si.scf.in  # provided in repo
 ```
+Sample inputs for the silicon case live under `cases/si/manual/data/` and are
+ready to use.
 
 ## 6. Run the silicon SCF example
 ```sh
-mpirun -n 2 artifacts/q-e-qe-7.4.1/bin/pw.x -in inputs/Si.scf.in \
-  | tee logs/si_scf_attemptB2.txt
+cd cases/si/manual
+../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in | tee logs/si_scf.txt
 ```
 Outputs:
-- `tmp/silicon.save`: wavefunctions and charge density.
-- `logs/si_scf_attemptB2.txt`: convergence history (5 iterations, `E_F ≈ 6.46 eV`).
-
-Copy the log to `analysis/Si/logs/` if you want to keep the raw transcript alongside plots.
+- `tmp/silicon.save`: wavefunctions and charge density (collected wavefunctions saved).
+- `logs/si_scf.txt`: convergence history (≈5 iterations, `E_F ≈ 6.43 eV`).
+- SCF mesh is 8×8×8, consistent with the convergence scans in `cases/si/convergence/`.
 
 ## 7. Band-structure workflow
+Still inside `cases/si/manual`:
 ```sh
-mpirun -n 2 artifacts/q-e-qe-7.4.1/bin/pw.x -in inputs/Si.bands.in \
-  | tee analysis/Si/logs/si_bands_pw.txt
-artifacts/q-e-qe-7.4.1/bin/bands.x -in inputs/Si.bands_post.in \
-  | tee analysis/Si/logs/si_bands_post.txt
-cp silicon.bands.dat* analysis/Si/data/
+../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in | tee logs/si_bands_pw.txt
+../../../scripts/run_qe.sh bands.x -- -in data/Si.bands_post.in | tee logs/si_bands_post.txt
+cp silicon.bands.dat* data/
 ```
-Generate a plot (installs Matplotlib under `~/Library/Python/3.13/`):
+Generate a plot (Matplotlib installed once via `python3 -m pip install --user matplotlib`):
 ```sh
-python3 -m pip install --user matplotlib
-python3 scripts/plot_si_bands.py
+python3 scripts/plot_bands.py
 ```
-Result: `analysis/Si/plots/si_band_structure.png`.
+Result: `plots/si_band_structure.png`.
+
+Optional: regenerate DOS/PDOS after the NSCF step (`scripts/plot_dos.py`, `scripts/plot_pdos.py`).
 
 ## 8. (Optional) CMake + OpenBLAS build
 This path is still experimental on macOS due to FoX preprocessing issues. To attempt it:
@@ -96,9 +99,10 @@ cmake --build buildA --target pw -j
 If `wxml.f90` fails with `DP_XML` errors, ensure `external/fox` exists **and** remove the `target_compile_definitions(qe_xml PRIVATE __XML_STANDALONE)` line from `upflib/CMakeLists.txt`. This forces QE to reuse the FoX-provided `DP_XML` type.
 
 ## 9. Housekeeping
-- Band/project files are archived under `analysis/Si/`.
-- Scripts live in `scripts/`; the plotting utility documents its inputs/outputs.
-- Bundle artefacts with `zip -r qe_macm4_attempt_bundle_v*.zip logs docs inputs analysis`.
+- Band/project files are archived under `cases/si/manual/data/` (manual) and `cases/si/pwtk/data/` (PWTK).
+- Convergence artefacts (CSV/JSON + plots) live in `cases/si/convergence/`; re-run with `python3 cases/si/convergence/run_convergence.py`.
+- Shared plotting helpers live in `cases/common/scripts/`; workflow-specific wrappers sit beside each case.
+- Bundle artefacts with `zip -r qe_macm4_attempt_bundle_v*.zip logs docs cases artifacts/q-e-qe-7.4.1/INSTALL.md` as needed.
 
 ## 10. Apple Silicon evolution notes
 - **macOS/CLT vintage matters more than the chip.** Sequoia (macOS 15.3+) plus CLT 16.x introduces the stricter `/usr/bin/cpp` that mangles `laxlib_*.h`, so `CPP="gcc -E"` is mandatory here. This flag is harmless on older releases.
@@ -115,3 +119,25 @@ Following these steps on any Apple Silicon Mac that runs Sequoia+CLT16 will yiel
 - **Library paths:** Homebrew installs everything under `/opt/homebrew`; no `DYLD_LIBRARY_PATH` tweaks were required in testing.
 
 Follow these steps to reproduce the working configuration captured in the repository. Adapt k-point meshes, cutoffs, or post-processing tools as your workloads demand.
+
+## PWTK helper
+
+Download the Tcl-based PWTK front-end only when needed:
+```sh
+scripts/setup/fetch_pwtk.sh
+export PATH="$PWD/external/pwtk-3.2:$PATH"
+```
+Ensure `tclsh8.6` comes from Homebrew (`brew bundle` installs `tcl-tk@8`).
+
+## Wannier90 MPI build
+
+After `make w90`, switch into `external/wannier90`, remove any old objects (`rm -rf src/obj src/objp`), and rebuild with MPI enabled:
+```sh
+cd artifacts/q-e-qe-7.4.1/external/wannier90
+rm -rf src/obj src/objp
+make COMMS=mpi wannier
+cp wannier90.x ../../bin/wannier90.x_mpi
+rm -rf src/obj src/objp
+make wannier
+```
+`wannier90.x -pp` stays serial; launch the MPI binary with the usual wrapper, e.g. `scripts/run_qe.sh wannier90.x_mpi -- mycalc`.

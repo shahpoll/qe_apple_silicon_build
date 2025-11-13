@@ -1,0 +1,5 @@
+# Wall-clock timings (seconds) extracted from QE logs
+stage manual pwtk
+scf 0.94 0.50
+bands 5.73 5.52
+nscf 11.88 4.15
