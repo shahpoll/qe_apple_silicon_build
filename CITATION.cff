@@ -1,14 +1,18 @@
 cff-version: 1.2.0
-title: "QE macOS M4 build notes"
+title: "QE Apple Silicon Build"
 authors:
-  - family-names: "Repository"
-    given-names: "Maintainers"
-repository-code: "https://github.com/shahpoll/qe_macm4_build"
-abstract: "Guides, scripts, and convergence data for building Quantum ESPRESSO on Apple Silicon (macOS 15)."
+  - family-names: "Shah"
+    given-names: "Pollob"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/shahpoll/qe_apple_silicon_build"
+version: "1.1.0"
+date-released: "2026-02-07"
+abstract: "Build, validate, and run Quantum ESPRESSO 7.5 on Apple Silicon (macOS 26). Includes one-command installation, comprehensive validation framework, and reproducible silicon workflows."
 keywords:
   - Quantum ESPRESSO
   - Apple Silicon
   - Density Functional Theory
+  - macOS
+  - DFT
 license: MIT
 message: "If you use this repository, please cite it using the metadata above."
-year: 2025

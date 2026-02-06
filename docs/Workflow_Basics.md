@@ -1,88 +1,90 @@
-# Beginner Workflow (macOS 15 / Apple Silicon)
+# Beginner Workflow (Apple Silicon)
 
-Follow these steps verbatim to install the prerequisites, build Quantum ESPRESSO, and run the silicon example without hunting through multiple guides.
+This is the shortest reliable path for a newcomer.
 
-## 0. One-liner bootstrap (clone → setup)
-
-```sh
-git clone https://github.com/shahpoll/qe_macm4_build.git
-cd qe_macm4_build
-bash scripts/setup/bootstrap.sh --with-pwtk --build-accelerate
-```
-
-> The bootstrapper installs the Homebrew toolchain, fetches QE 7.4.1, downloads the silicon pseudopotential, optionally grabs PWTK 3.2, and builds the Accelerate+MPI executable set.
-
-## 1. Prepare your shell
+## 0) Clone the repository
 
 ```sh
-cd /path/to/qe_macm4_build
-export PATH="$PWD/external/pwtk-3.2:$PATH"   # only if you passed --with-pwtk
+git clone https://github.com/shahpoll/qe_apple_silicon_build.git
+cd qe_apple_silicon_build
 ```
 
-If you skipped the `--with-pwtk` flag you can still run manual workflows; PWTK is optional.
+## 1) Install QE (one command)
 
-## 2. ALWAYS set core usage before any QE command
-
-Apple Silicon splits performance and efficiency cores. The MPI wrapper does **not** guess for you—export the layout each time you open a new terminal or before you run a script:
+Interactive:
 
 ```sh
-export QE_RANKS=8          # 4 performance + 4 efficiency cores
-export QE_CPUSET=0-9       # cover all 10 cores; adjust (e.g., 0-3) for quieter runs
-export OMP_NUM_THREADS=1   # keep QE in pure-MPI mode
+bash scripts/qe_manager.sh
 ```
 
-To run a QE executable, *always* go through the wrapper:
+Non-interactive:
 
 ```sh
-./scripts/run_qe.sh pw.x -- -in cases/si/manual/data/Si.scf.in
+bash scripts/qe_manager.sh install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5" --with-pwtk
 ```
 
-If you forget to set `QE_RANKS`/`QE_CPUSET`, QE will default to 8 ranks on arbitrary cores and hwloc may abort. Make it a habit to export these vars (or add them to your shell rc file) before every session.
+What this does:
 
-## 3. Silicon workflow (manual path)
+- installs Homebrew dependencies from `Brewfile`
+- fetches QE sources
+- builds the QE binaries
+- optionally fetches PWTK
+
+## 2) Configure runtime environment
+
+```sh
+export QE_RANKS=8
+export QE_CPUSET=0-9
+export OMP_NUM_THREADS=1
+```
+
+Use fewer ranks for quiet test runs (for example, `QE_RANKS=2`).
+
+## 3) Run the silicon reference workflow
 
 ```sh
 cd cases/si/manual
 
-# SCF
-../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in     | tee logs/si_scf.txt
-
-# Band path
-../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in   | tee logs/si_bands_pw.txt
+../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in | tee logs/si_scf.txt
+../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in | tee logs/si_bands_pw.txt
 ../../../scripts/run_qe.sh bands.x -- -in data/Si.bands_post.in | tee logs/si_bands_post.txt
-
-# NSCF, DOS, PDOS
-../../../scripts/run_qe.sh pw.x -- -in data/Si.nscf.in    | tee logs/si_nscf_pw.txt
-../../../scripts/run_qe.sh dos.x -- -in data/Si.dos.in    | tee logs/si_dos.txt
+../../../scripts/run_qe.sh pw.x -- -in data/Si.nscf.in | tee logs/si_nscf_pw.txt
+../../../scripts/run_qe.sh dos.x -- -in data/Si.dos.in | tee logs/si_dos.txt
 ../../../scripts/run_qe.sh projwfc.x -- -in data/Si.projwfc.in | tee logs/si_projwfc.txt
 
-# Plots + summary
 python3 scripts/plot_bands.py
 python3 scripts/plot_dos.py
 python3 scripts/plot_pdos.py
 python3 scripts/analyze_bandgap.py
 ```
 
-Outputs land in `data/`, `logs/`, and `plots/`. Each plotting script automatically aligns energies so that the DOS-derived Fermi level is at 0 eV.
+Outputs:
 
-## 4. Optional: fully automated PWTK workflow
+- raw data: `cases/si/manual/data/`
+- logs: `cases/si/manual/logs/`
+- plots: `cases/si/manual/plots/`
+
+## 4) Validate migration/build stability
 
 ```sh
-cd ../../si/pwtk
-../../../external/pwtk-3.2/pwtk scripts/si_workflow.pwtk | tee logs/pwtk_run.log
-python3 scripts/plot_bands.py
-python3 scripts/plot_dos.py
-python3 scripts/plot_pdos.py
-python3 scripts/analyze_bandgap.py
+cd ../../..
+bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
 ```
 
-Remember to keep the same `QE_RANKS`/`QE_CPUSET` exports in effect before you start PWTK—the toolkit forwards your environment to `scripts/run_qe.sh`.
+Check these files:
 
-## 5. What you just installed
+- `validation_reports/ci_migration_check/VALIDATION_REPORT.md`
+- `validation_reports/ci_migration_check/tables/final_matrix.tsv`
+- `validation_reports/ci_migration_check/plots/`
 
-- Homebrew GCC/OpenMPI/CMake/veclibfort/OpenBLAS (see `Brewfile`)
-- Quantum ESPRESSO 7.4.1 sources under `artifacts/q-e-qe-7.4.1`
-- Silicon PSLibrary pseudopotential under `cases/common/pp/`
-- Optional PWTK 3.2 under `external/`
+## 5) Optional brew-style command
 
-Review `docs/Workflow_Basics.md` any time you need the quick recipe again, and consult `docs/Troubleshooting.md` if a step fails. Keeping the multi-core exports in place is the key difference between smooth runs and hwloc binding errors on Apple Silicon.
+```sh
+brew install --HEAD ./Formula/qe-apple-silicon-build.rb
+qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
+qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
+```
+
+## 6) If something fails
+
+Go to `Troubleshooting.md` first.

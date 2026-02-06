@@ -10,10 +10,39 @@ fi
 EXE_NAME="$1"
 shift
 ROOT_DIR=$(cd -- "$(dirname "$0")/.." && pwd)
-QE_BIN_PATH="${QE_BIN_PATH:-$ROOT_DIR/artifacts/q-e-qe-7.4.1/bin}"
-EXE="$QE_BIN_PATH/$EXE_NAME"
-if [[ ! -x "$EXE" ]]; then
-  echo "Executable $EXE not found. Set QE_BIN_PATH or build QE first." >&2
+
+resolve_qe_exe() {
+  local exe_name="$1"
+  local -a candidates=()
+
+  if [[ -n "${QE_BIN_PATH:-}" ]]; then
+    candidates+=("${QE_BIN_PATH%/}")
+  fi
+  candidates+=(
+    "$ROOT_DIR/artifacts/q-e-qe-7.5/bin"
+    "$ROOT_DIR/artifacts/q-e-qe-7.4.1/bin"
+    "$HOME/opt/qe-7.5/bin"
+    "$HOME/opt/qe-7.4.1/bin"
+  )
+
+  local bin_dir
+  for bin_dir in "${candidates[@]}"; do
+    if [[ -x "$bin_dir/$exe_name" ]]; then
+      printf "%s\n" "$bin_dir/$exe_name"
+      return 0
+    fi
+  done
+
+  if command -v "$exe_name" >/dev/null 2>&1; then
+    command -v "$exe_name"
+    return 0
+  fi
+
+  return 1
+}
+
+if ! EXE=$(resolve_qe_exe "$EXE_NAME"); then
+  echo "Executable '$EXE_NAME' not found. Set QE_BIN_PATH or build/install QE first." >&2
   exit 2
 fi
 
@@ -31,6 +60,7 @@ fi
 
 echo "[run_qe] Using $RANKS MPI ranks, OMP_NUM_THREADS=$OMP_NUM_THREADS" >&2
 echo "[run_qe] Binding args: $BINDING ${QE_CPUSET:+(CPUSET=$QE_CPUSET)}" >&2
+echo "[run_qe] Executable: $EXE" >&2
 
 if ! mpirun -np "$RANKS" $BINDING $CPU_SET_OPT "$EXE" "$@"; then
   if [[ "${QE_BINDING:-}" == "" && "$BINDING" == "$DEFAULT_BINDING" ]]; then

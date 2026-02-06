@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Unified CLI entrypoint for QE Apple Silicon build/install/check workflows.
+set -euo pipefail
+
+SELF_DIR=$(cd -- "$(dirname "$0")" && pwd)
+ROOT_DIR=$(cd -- "$SELF_DIR/.." && pwd)
+MANAGER="$ROOT_DIR/scripts/qe_manager.sh"
+CI_CHECK="$ROOT_DIR/scripts/ci_migration_check.sh"
+SMOKE="$ROOT_DIR/scripts/smoke_test.py"
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  qe-apple-silicon-build <command> [options]
+
+Commands:
+  install      Install QE build (delegates to scripts/qe_manager.sh install)
+  update       Update QE build (delegates to scripts/qe_manager.sh update)
+  menu         Interactive install/update flow
+  check        Run CI-style migration check
+  smoke        Run smoke test
+  help         Show help
+
+Examples:
+  qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
+  qe-apple-silicon-build update --qe-tag qe-7.5 --with-pwtk
+  qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
+USAGE
+}
+
+if [[ $# -lt 1 ]]; then
+  exec "$MANAGER" menu
+fi
+
+cmd="$1"
+shift || true
+
+case "$cmd" in
+  install|update|menu)
+    exec "$MANAGER" "$cmd" "$@"
+    ;;
+  check|ci-check|validate)
+    exec "$CI_CHECK" "$@"
+    ;;
+  smoke)
+    exec python3 "$SMOKE" "$@"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "Unknown command: $cmd" >&2
+    usage
+    exit 1
+    ;;
+esac

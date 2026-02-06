@@ -1,0 +1,51 @@
+name: QE Migration Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'scripts/**'
+      - 'bin/**'
+      - 'Formula/**'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'CITATION.cff'
+      - '.github/workflows/migration-check.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'bin/**'
+      - 'Formula/**'
+
+jobs:
+  validate-migration:
+    runs-on: [self-hosted, macOS]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build or update QE toolchain
+        run: |
+          bash scripts/qe_manager.sh update \
+            --qe-tag qe-7.5 \
+            --install-prefix "$HOME/opt/qe-7.5" \
+            --skip-validate
+
+      - name: Run CI migration check
+        run: |
+          bash scripts/ci_migration_check.sh \
+            --qe-bin "$HOME/opt/qe-7.5/bin" \
+            --out-dir "validation_reports/ci_${{ github.run_id }}"
+
+      - name: Upload validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: qe-migration-validation-${{ github.run_id }}
+          path: |
+            validation_reports/ci_${{ github.run_id }}/VALIDATION_REPORT.md
+            validation_reports/ci_${{ github.run_id }}/tables/
+            validation_reports/ci_${{ github.run_id }}/plots/

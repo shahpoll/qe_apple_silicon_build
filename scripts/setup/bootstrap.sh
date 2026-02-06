@@ -7,9 +7,11 @@ usage() {
 Usage: scripts/setup/bootstrap.sh [options]
 
 Options:
-  --qe-tag <tag>        QE archive tag (default: qe-7.4.1)
+  --qe-tag <tag>        QE archive tag (default: qe-7.5)
   --with-pwtk           Download PWTK 3.2 into external/
   --build-accelerate    Configure + build QE with Accelerate + veclibfort
+  --force-fetch         Re-download QE sources even if artifacts already exist
+  --install-prefix <p>  Copy built binaries to prefix/bin after build
   -h, --help            Show this help
 
 Examples:
@@ -21,9 +23,11 @@ Examples:
 EOF
 }
 
-QE_TAG="qe-7.4.1"
+QE_TAG="qe-7.5"
 WITH_PWTK=0
 BUILD_ACCEL=0
+FORCE_FETCH=0
+INSTALL_PREFIX=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -38,6 +42,14 @@ while [[ $# -gt 0 ]]; do
     --build-accelerate)
       BUILD_ACCEL=1
       shift
+      ;;
+    --force-fetch)
+      FORCE_FETCH=1
+      shift
+      ;;
+    --install-prefix)
+      INSTALL_PREFIX="$2"
+      shift 2
       ;;
     -h|--help)
       usage
@@ -65,7 +77,10 @@ echo "[bootstrap] Installing/upgrading Homebrew packages (see Brewfile)..."
 brew bundle --no-lock
 
 QE_DIR="artifacts/q-e-${QE_TAG}"
-if [[ ! -d "$QE_DIR" ]]; then
+if [[ $FORCE_FETCH -eq 1 ]]; then
+  echo "[bootstrap] Force-fetching Quantum ESPRESSO $QE_TAG ..."
+  scripts/setup/fetch_qe.sh "$QE_TAG"
+elif [[ ! -d "$QE_DIR" ]]; then
   echo "[bootstrap] Fetching Quantum ESPRESSO $QE_TAG ..."
   scripts/setup/fetch_qe.sh "$QE_TAG"
 else
@@ -98,8 +113,14 @@ if [[ $BUILD_ACCEL -eq 1 ]]; then
   ./configure MPIF90=mpif90 CC=mpicc CPP="gcc -E" \
     BLAS_LIBS="-L$(brew --prefix veclibfort)/lib -lvecLibFort -framework Accelerate" \
     LAPACK_LIBS="-L$(brew --prefix veclibfort)/lib -lvecLibFort -framework Accelerate"
-  make -j pw
-  make -C PP/src bands.x dos.x projwfc.x
+  make -j pw ph neb hp epw
+  make -C PP/src bands.x dos.x projwfc.x pp.x pw2wannier90.x
+  make w90
+  if [[ -n "$INSTALL_PREFIX" ]]; then
+    mkdir -p "$INSTALL_PREFIX/bin"
+    cp -f bin/* "$INSTALL_PREFIX/bin/"
+    echo "[bootstrap] Installed QE binaries to $INSTALL_PREFIX/bin"
+  fi
   popd >/dev/null
 fi
 

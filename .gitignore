@@ -10,3 +10,12 @@ __pycache__/
 
 tmp_smoke.out
 external/
+validation_reports/
+
+# Validation work directories
+si_validation*/
+tmp_*/
+*.wfc*
+*.save/
+*.xml
+*.cube

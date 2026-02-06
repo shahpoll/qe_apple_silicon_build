@@ -1,39 +1,31 @@
-# Troubleshooting FAQ
+# Troubleshooting
 
-See also [`docs/Troubleshooting.md`](../Troubleshooting.md) for the full in-repo version.
+Full guide: `docs/Troubleshooting.md`
 
-## `make[1]: laxlib*.fh ... no input files`
+## Common issues
 
-- Symptom: preprocessing fails while building `LAXlib`.
-- Fix: rerun `./configure` with `CPP="gcc -E"` (or export `CPP` globally) so that CLT 16 uses GNU cpp semantics.
+### LAXlib preprocessing errors
 
-## `wxml.f90: DP_XML has no implicit type`
+Reconfigure with `CPP="gcc -E"`.
 
-- Symptom: CMake/OpenBLAS build fails compiling `upflib/wxml.f90`.
-- Cause: QE 7.4.1 expects FoX sources when `__XML_STANDALONE` is off; cloning FoX or removing the `__XML_STANDALONE` define resolves it. You can also pass `--with-fox=yes` (configure) or `-DFOX=ON` (CMake) to let QE build the library automatically.
+### MPI socket/bind errors
 
-## `pp.x`/`pw.x` cannot find pseudopotentials
+Run through `scripts/run_qe.sh` and set:
 
-- Ensure pseudopotentials live in `cases/common/pp` (e.g., `Si.pbe-n-rrkjus_psl.1.0.0.UPF`).
-- Workflow inputs target `pseudo_dir='../../common/pp'`; run QE from the corresponding case directory (`cases/si/manual`, `cases/si/pwtk`).
+```sh
+export QE_BINDING="--bind-to none"
+```
 
-## `projwfc.x` missing
+### Missing post-processing binaries (`dos.x`, `projwfc.x`, `bands.x`)
 
-- By default `make pw` does not build post-processing tools. Run `make -C PP/src projwfc.x dos.x bands.x` in the QE source tree.
+Rebuild using `scripts/qe_manager.sh install ...` or build PP tools explicitly.
 
-## Where is Matplotlib?
+### Phonon regression suspicion
 
-- `pip --user` installs to `~/Library/Python/3.13/bin`. Add this directory to `PATH` if the plotting wrappers under `cases/si/*/scripts` cannot find `matplotlib`.
+Run:
 
-## GPU acceleration?
+```sh
+bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
+```
 
-- Not on Apple Silicon. QE supports CUDA/ROCm only; Metal GPUs are not yet supported upstream.
-
-## SCF vs DOS Fermi level mismatch
-
-- Expect DOS/PDOS workflows (denser k-mesh, Gaussian smearing) to report Fermi levels ~0.2 eV lower than the SCF value.
-- See `cases/si/comparison/data/fermi_consistency.csv` for the recorded offsets (manual vs PWTK).
-
-## MPI oversubscription
-
-- Use a small number of MPI ranks (e.g. `mpirun -n 2`) and set `OMP_NUM_THREADS=1` to avoid oversubscription on Apple Silicon laptops; treat timings as illustrative only.
+and inspect `final_matrix.tsv`.
