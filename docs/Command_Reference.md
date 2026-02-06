@@ -35,6 +35,12 @@ qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
 qe-apple-silicon-build smoke --ranks 2
 ```
 
+## Publish Homebrew tap formula
+
+```sh
+bash scripts/publish_homebrew_tap.sh --version v1.2.0
+```
+
 ## Runtime env helpers
 
 ```sh

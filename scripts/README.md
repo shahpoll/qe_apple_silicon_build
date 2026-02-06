@@ -8,6 +8,8 @@ Primary commands:
   - Run smoke test + full validation in one command.
 - `publish_wiki.sh`
   - Publish `docs/wiki/` pages to the GitHub wiki repository.
+- `publish_homebrew_tap.sh`
+  - Publish/update the Homebrew tap formula from a tagged release.
 - `validate_build.py`
   - Full campaign generator (tables, plots, report).
 - `smoke_test.py`

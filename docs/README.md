@@ -16,6 +16,8 @@ This folder is organized for first-time users first, then deeper references.
   - Common build/runtime failures and exact fixes.
 - `Command_Reference.md`
   - Fast command cheat sheet for install/run/validate workflows.
+- `Homebrew_Tap.md`
+  - How to publish and maintain the tap for one-command `brew install`.
 - `PP.md`
   - Pseudopotential notes and cutoff guidance.
 - `Release_Checklist.md`

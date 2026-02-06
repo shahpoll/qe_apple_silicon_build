@@ -52,6 +52,16 @@ brew install --HEAD ./Formula/qe-apple-silicon-build.rb
 qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
 ```
 
+For production distribution through your own tap:
+
+```sh
+brew tap shahpoll/qe
+brew install shahpoll/qe/qe-silicon
+```
+
+Canonical formula name stays `qe-apple-silicon-build`; shorter aliases can be `qe-silicon` and `qe-asb`.
+Setup details: `docs/Homebrew_Tap.md`
+
 Then you can run:
 
 - `qe-apple-silicon-build install ...`
@@ -84,7 +94,7 @@ Generated evidence includes TSV matrices, plots, and `VALIDATION_REPORT.md`.
 | `scripts/validate_build.py` | Validation campaign generator |
 | `scripts/run_qe.sh` | MPI wrapper for QE executables |
 | `bin/qe-apple-silicon-build` | User-facing CLI entrypoint |
-| `Formula/qe-apple-silicon-build.rb` | Homebrew formula (HEAD install) |
+| `Formula/qe-apple-silicon-build.rb` | Homebrew formula (local/HEAD install) |
 | `cases/si/manual` | Manual silicon workflow |
 | `cases/si/pwtk` | PWTK-driven workflow |
 | `cases/si/comparison` | Manual vs PWTK comparisons |

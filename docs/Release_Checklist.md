@@ -67,3 +67,13 @@ Include in PR body:
 - what changed (docs/scripts/layout)
 - validation summary (`PASS/FAIL/TOTAL`)
 - path to validation report (`validation_reports/.../VALIDATION_REPORT.md`)
+
+## 7) Publish Homebrew tap formula (optional release step)
+
+After tagging and pushing a release tag:
+
+```sh
+bash scripts/publish_homebrew_tap.sh --version v1.2.0
+```
+
+Details and naming options are documented in `docs/Homebrew_Tap.md`.
