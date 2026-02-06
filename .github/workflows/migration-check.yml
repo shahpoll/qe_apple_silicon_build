@@ -22,7 +22,8 @@ on:
 
 jobs:
   validate-migration:
-    runs-on: [self-hosted, macOS]
+    # Use GitHub-hosted runners by default so checks are not stuck waiting for self-hosted capacity.
+    runs-on: macos-14
 
     steps:
       - name: Checkout

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-02-07
+## [1.1.0] - 2026-02-06
 
 ### Changed
 
@@ -18,9 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Comprehensive validation framework** (`scripts/validate_build.py`)
-  - 39 automated test cases covering SCF, bands, DOS, PDOS, phonons
-  - MPI rank sweep (1, 2, 4, 8 ranks) for portability testing
-  - Reproducibility tests (5 repeated runs, σ = 0.0 energy variance)
+  - 43 automated validation checks in the CI migration profile
+  - MPI rank sweep portability checks (CI default: 1, 2, 4; configurable)
+  - Reproducibility tests with repeated SCF runs
   - Module launch checks for all QE executables
 - **Advanced mini-workflows**
   - HP (Hubbard perturbation) setup validation

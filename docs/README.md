@@ -34,3 +34,14 @@ These are useful for historical context but are not the main onboarding path.
 ## Wiki Mirror
 
 `wiki/` contains pages that can be copied into the GitHub wiki with minimal edits.
+
+To publish them to the actual GitHub wiki repository:
+
+```sh
+git clone https://github.com/shahpoll/qe_apple_silicon_build.wiki.git /tmp/qe_wiki
+cp docs/wiki/*.md /tmp/qe_wiki/
+cd /tmp/qe_wiki
+git add .
+git commit -m "Update wiki pages"
+git push
+```

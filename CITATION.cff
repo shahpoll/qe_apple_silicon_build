@@ -6,7 +6,7 @@ authors:
     orcid: "https://orcid.org/0000-0000-0000-0000"
 repository-code: "https://github.com/shahpoll/qe_apple_silicon_build"
 version: "1.1.0"
-date-released: "2026-02-07"
+date-released: "2026-02-06"
 abstract: "Build, validate, and run Quantum ESPRESSO 7.5 on Apple Silicon (macOS 26). Includes one-command installation, comprehensive validation framework, and reproducible silicon workflows."
 keywords:
   - Quantum ESPRESSO

@@ -92,6 +92,8 @@ Generated evidence includes TSV matrices, plots, and `VALIDATION_REPORT.md`.
 | `docs/` | Beginner docs, troubleshooting, release guidance |
 | `docs/wiki/` | Wiki-ready mirror pages |
 
+Note: GitHub wiki content is a separate `.wiki.git` repo. See `docs/wiki/README.md` for sync steps.
+
 ## For Newcomers
 
 Start here in this order:
