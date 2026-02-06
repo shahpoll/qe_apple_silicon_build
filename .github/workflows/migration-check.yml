@@ -22,8 +22,8 @@ on:
 
 jobs:
   validate-migration:
-    # Use GitHub-hosted runners by default so checks are not stuck waiting for self-hosted capacity.
-    runs-on: macos-14
+    # Use self-hosted Apple Silicon runner to match local migration target (macOS 26).
+    runs-on: [self-hosted, macOS, ARM64]
 
     steps:
       - name: Checkout
