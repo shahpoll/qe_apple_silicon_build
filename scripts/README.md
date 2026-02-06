@@ -6,6 +6,8 @@ Primary commands:
   - Install/update QE toolchain and optionally run full validation.
 - `ci_migration_check.sh`
   - Run smoke test + full validation in one command.
+- `publish_wiki.sh`
+  - Publish `docs/wiki/` pages to the GitHub wiki repository.
 - `validate_build.py`
   - Full campaign generator (tables, plots, report).
 - `smoke_test.py`
