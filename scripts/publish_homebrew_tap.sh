@@ -4,7 +4,7 @@ set -euo pipefail
 
 DEFAULT_TAP_URL="https://github.com/shahpoll/homebrew-qe.git"
 DEFAULT_FORMULA_NAME="qe-apple-silicon-build"
-DEFAULT_ALIASES="qe-silicon,qe-asb"
+DEFAULT_ALIASES="qe-macos"
 
 VERSION_TAG=""
 TAP_URL="$DEFAULT_TAP_URL"
@@ -27,7 +27,7 @@ Options:
   --tap-url <url>         Tap repo URL (default: https://github.com/shahpoll/homebrew-qe.git)
   --tap-dir <path>        Existing local tap clone (default: temp clone)
   --formula-name <name>   Formula filename (default: qe-apple-silicon-build)
-  --aliases <csv>         Alias names (default: qe-silicon,qe-asb)
+  --aliases <csv>         Alias names (default: qe-macos)
   --message <msg>         Commit message for tap update
   --no-push               Commit locally without pushing
   --dry-run               Preview staged tap changes
@@ -37,7 +37,7 @@ Options:
 Examples:
   bash scripts/publish_homebrew_tap.sh --version v1.2.0
   bash scripts/publish_homebrew_tap.sh --version v1.2.0 --dry-run
-  bash scripts/publish_homebrew_tap.sh --version v1.2.0 --aliases "qe-silicon,qe-asb,qe-build"
+  bash scripts/publish_homebrew_tap.sh --version v1.2.0 --aliases "qe-macos,qe-asb,qe-build"
 USAGE
 }
 
@@ -203,8 +203,7 @@ brew install shahpoll/qe/${FORMULA_NAME}
 Short aliases (if enabled):
 
 \`\`\`sh
-brew install shahpoll/qe/qe-silicon
-brew install shahpoll/qe/qe-asb
+brew install shahpoll/qe/qe-macos
 \`\`\`
 EOF
 fi

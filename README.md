@@ -56,10 +56,10 @@ For production distribution through your own tap:
 
 ```sh
 brew tap shahpoll/qe
-brew install shahpoll/qe/qe-silicon
+brew install shahpoll/qe/qe-macos
 ```
 
-Canonical formula name stays `qe-apple-silicon-build`; shorter aliases can be `qe-silicon` and `qe-asb`.
+Canonical formula name stays `qe-apple-silicon-build`; short alias is `qe-macos`.
 Setup details: `docs/Homebrew_Tap.md`
 
 Then you can run:

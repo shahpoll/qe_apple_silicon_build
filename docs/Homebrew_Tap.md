@@ -7,7 +7,7 @@ This guide prepares a btop-style install flow for this project.
 After setup, users install with one command:
 
 ```sh
-brew install shahpoll/qe/qe-silicon
+brew install shahpoll/qe/qe-macos
 ```
 
 or
@@ -47,25 +47,25 @@ This script:
 - downloads the release tarball from GitHub
 - computes `sha256`
 - writes/updates `Formula/qe-apple-silicon-build.rb`
-- creates short aliases (`qe-silicon`, `qe-asb`)
+- creates short aliases (`qe-macos` by default)
 - commits and pushes to tap
 
 ## 4) User install commands
 
 ```sh
 brew tap shahpoll/qe
-brew install shahpoll/qe/qe-silicon
+brew install shahpoll/qe/qe-macos
 ```
 
 ## Naming suggestions (shorter install keywords)
 
 Recommended:
 
-- `qe-silicon` (best balance of short + clear)
-- `qe-asb` (very short acronym)
+- `qe-macos` (your selected short keyword)
 
 Optional alternatives:
 
+- `qe-asb`
 - `qe-apple`
 - `qe-build`
 
