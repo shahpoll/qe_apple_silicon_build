@@ -10,6 +10,8 @@ Primary commands:
   - Publish `docs/wiki/` pages to the GitHub wiki repository.
 - `publish_homebrew_tap.sh`
   - Publish/update the Homebrew tap formula from a tagged release.
+- `publish_release_and_tap.sh`
+  - One-command publish for source release tag plus Homebrew tap update.
 - `validate_build.py`
   - Full campaign generator (tables, plots, report).
 - `smoke_test.py`

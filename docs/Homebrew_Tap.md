@@ -33,6 +33,12 @@ git tag v1.2.0
 git push origin v1.2.0
 ```
 
+Or run the one-command publisher (recommended):
+
+```sh
+bash scripts/publish_release_and_tap.sh --version v1.2.0
+```
+
 ## 3) Publish/update formula in tap
 
 Use the automation script:

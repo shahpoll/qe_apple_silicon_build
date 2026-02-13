@@ -41,6 +41,12 @@ qe-apple-silicon-build smoke --ranks 2
 bash scripts/publish_homebrew_tap.sh --version v1.2.0
 ```
 
+## Publish release and tap in one command
+
+```sh
+bash scripts/publish_release_and_tap.sh --version v1.2.0
+```
+
 ## Runtime env helpers
 
 ```sh

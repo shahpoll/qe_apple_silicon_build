@@ -77,3 +77,9 @@ bash scripts/publish_homebrew_tap.sh --version v1.2.0
 ```
 
 Details and naming options are documented in `docs/Homebrew_Tap.md`.
+
+Or use the one-shot publisher:
+
+```sh
+bash scripts/publish_release_and_tap.sh --version v1.2.0
+```
