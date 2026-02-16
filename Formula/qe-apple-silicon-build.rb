@@ -3,7 +3,7 @@ class QeAppleSiliconBuild < Formula
   homepage "https://github.com/shahpoll/qe_apple_silicon_build"
   license "MIT"
 
-  # HEAD-only formula until versioned release tarballs are published.
+  # Local development formula; stable release formula is published in shahpoll/homebrew-qe.
   head "https://github.com/shahpoll/qe_apple_silicon_build.git", branch: "main"
 
   depends_on "python@3.13"

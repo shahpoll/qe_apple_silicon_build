@@ -10,6 +10,8 @@ on:
       - 'bin/**'
       - 'Formula/**'
       - 'docs/**'
+      - 'cases/**'
+      - 'inputs/**'
       - 'CHANGELOG.md'
       - 'CITATION.cff'
       - '.github/workflows/migration-check.yml'
@@ -19,6 +21,8 @@ on:
       - 'scripts/**'
       - 'bin/**'
       - 'Formula/**'
+      - 'cases/**'
+      - 'inputs/**'
 
 jobs:
   validate-migration:

@@ -15,7 +15,15 @@ git clone https://github.com/shahpoll/qe_apple_silicon_build.git
 cd qe_apple_silicon_build
 ```
 
-### 2) Install or update QE (single command)
+### 2) Preflight (required once per machine)
+
+Before running install commands:
+
+- Install Apple Command Line Tools: `xcode-select --install`
+- Keep at least ~12 GB free on `/` (CLT + Homebrew dependency downloads are large)
+- Confirm active developer tools path: `xcode-select -p`
+
+### 3) Install or update QE (single command)
 
 Interactive (recommended first time):
 
@@ -35,7 +43,7 @@ Non-interactive update:
 bash scripts/qe_manager.sh update --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
 ```
 
-### 3) Validate the build (CI-style command)
+### 4) Validate the build (CI-style command)
 
 ```sh
 bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"

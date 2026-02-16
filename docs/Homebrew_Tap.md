@@ -16,6 +16,16 @@ or
 brew install shahpoll/qe/qe-apple-silicon-build
 ```
 
+## Prerequisites (first-time machine setup)
+
+- Apple Command Line Tools must be installed (`xcode-select --install`).
+- Keep at least ~12 GB free on `/` before running Homebrew install/update steps.
+- Verify CLT is active:
+
+```sh
+xcode-select -p
+```
+
 ## 1) Create the tap repository (one-time)
 
 Create a GitHub repo named:
