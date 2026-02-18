@@ -1,5 +1,11 @@
 # Build outputs
 artifacts/q-e-*
+
+# Build logs (historical attempt logs; not for public repo)
+logs/
+
+# Scratch / temp files
+input_tmp.in
 qe_macm4_attempt_bundle*.zip
 pwtk-*
 *.tar.gz

@@ -2,20 +2,43 @@
 
 Build, run, and validate Quantum ESPRESSO on Apple Silicon with a clean newcomer workflow.
 
-- Current baseline: macOS 26 + QE 7.5
-- Focus: reproducible CPU workflows (SCF/BANDS/DOS/PDOS/phonons + HP/NEB/EPW mini-workflows)
-- Previous repository name: `qe_macos15_build` (now `qe_apple_silicon_build`)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![macOS](https://img.shields.io/badge/macOS-26%2B-lightgrey?logo=apple)
+![QE](https://img.shields.io/badge/QE-7.5-orange)
+![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-M1%2FM2%2FM3%2FM4-green)
+
+- **Current baseline:** macOS 26 + QE 7.5
+- **Focus:** reproducible CPU workflows (SCF/BANDS/DOS/PDOS/phonons + HP/NEB/EPW mini-workflows)
+- **Previous repository name:** `qe_macos15_build` (now `qe_apple_silicon_build`)
+
+---
 
 ## Quick Start
 
-### 1) Clone
+### 1) Install via Homebrew (recommended)
+
+```sh
+brew tap shahpoll/qe
+brew install shahpoll/qe/qe-macos
+```
+
+Then install QE:
+
+```sh
+qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
+```
+
+### 2) Or clone and run directly
 
 ```sh
 git clone https://github.com/shahpoll/qe_apple_silicon_build.git
 cd qe_apple_silicon_build
+bash scripts/qe_manager.sh
 ```
 
-### 2) Preflight (required once per machine)
+---
+
+## Preflight (required once per machine)
 
 Before running install commands:
 
@@ -23,59 +46,35 @@ Before running install commands:
 - Keep at least ~12 GB free on `/` (CLT + Homebrew dependency downloads are large)
 - Confirm active developer tools path: `xcode-select -p`
 
-### 3) Install or update QE (single command)
+---
 
-Interactive (recommended first time):
+## Commands
 
-```sh
-bash scripts/qe_manager.sh
-```
+After installing via Homebrew, you have a single CLI entrypoint:
 
-Non-interactive install:
+| Command | What it does |
+|---|---|
+| `qe-apple-silicon-build install ...` | Install QE from source |
+| `qe-apple-silicon-build update ...` | Update an existing QE build |
+| `qe-apple-silicon-build check --qe-bin ...` | Run CI-style validation |
+| `qe-apple-silicon-build smoke --ranks 2` | Quick smoke test |
+| `qe-apple-silicon-build menu` | Interactive install/update flow |
 
-```sh
-bash scripts/qe_manager.sh install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5" --with-pwtk
-```
-
-Non-interactive update:
-
-```sh
-bash scripts/qe_manager.sh update --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-```
-
-### 4) Validate the build (CI-style command)
+**Non-interactive install:**
 
 ```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
+qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5" --with-pwtk
 ```
 
-Outputs are written under `validation_reports/...`.
-
-## Brew-Style Command UX
-
-If you prefer an app-like command surface (`brew install ...` then run one command):
+**Validate the build:**
 
 ```sh
-brew install --HEAD ./Formula/qe-apple-silicon-build.rb
-qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
+qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
 ```
 
-For production distribution through your own tap:
+Outputs are written under `validation_reports/`.
 
-```sh
-brew tap shahpoll/qe
-brew install shahpoll/qe/qe-macos
-```
-
-Canonical formula name stays `qe-apple-silicon-build`; short alias is `qe-macos`.
-Setup details: `docs/Homebrew_Tap.md`
-
-Then you can run:
-
-- `qe-apple-silicon-build install ...`
-- `qe-apple-silicon-build update ...`
-- `qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"`
-- `qe-apple-silicon-build smoke --ranks 2`
+---
 
 ## What Gets Validated
 
@@ -92,6 +91,8 @@ The validator (`scripts/validate_build.py`) runs:
   - `epw.x`: SCF/NSCF + Wannier + EPW interpolation sanity path
 
 Generated evidence includes TSV matrices, plots, and `VALIDATION_REPORT.md`.
+
+---
 
 ## Repository Map
 
@@ -112,6 +113,8 @@ Generated evidence includes TSV matrices, plots, and `VALIDATION_REPORT.md`.
 
 Note: GitHub wiki content is a separate `.wiki.git` repo. See `docs/wiki/README.md` for sync steps.
 
+---
+
 ## For Newcomers
 
 Start here in this order:
@@ -120,24 +123,30 @@ Start here in this order:
 2. `docs/Troubleshooting.md`
 3. `docs/Release_Checklist.md` (before publishing)
 
+---
+
 ## Notes and Limits
 
 - Apple GPU acceleration is not available in QE (CPU-only on Apple Silicon).
 - Keep `OMP_NUM_THREADS=1` unless you are intentionally running hybrid MPI/OpenMP tests.
 - Prefer QE 7.5 for macOS 26 stability.
 
+---
+
 ## Documentation Index
 
-- `docs/README.md`
-- `docs/Workflow_Basics.md`
-- `docs/Command_Reference.md`
-- `docs/Troubleshooting.md`
-- `docs/PP.md`
-- `docs/Release_Checklist.md`
-- `docs/archive/` (legacy notes and historical worklogs)
-- `CONTRIBUTING.md`
+- [`docs/README.md`](docs/README.md)
+- [`docs/Workflow_Basics.md`](docs/Workflow_Basics.md)
+- [`docs/Command_Reference.md`](docs/Command_Reference.md)
+- [`docs/Troubleshooting.md`](docs/Troubleshooting.md)
+- [`docs/PP.md`](docs/PP.md)
+- [`docs/Release_Checklist.md`](docs/Release_Checklist.md)
+- [`docs/archive/`](docs/archive/) — legacy notes and historical worklogs
+- [`CONTRIBUTING.md`](CONTRIBUTING.md)
+
+---
 
 ## License and Citation
 
-- License: `LICENSE` (MIT)
-- Citation metadata: `CITATION.cff`
+- License: [`LICENSE`](LICENSE) (MIT)
+- Citation metadata: [`CITATION.cff`](CITATION.cff)

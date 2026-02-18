@@ -1,139 +1,0 @@
-=== Attempt B: configure ===
--n directory LAXlib : ok
--n directory FFTXlib/src : ok
--n directory UtilXlib : ok
--n directory dft-d3 : ok
--n directory KS_Solvers/Davidson : ok
--n directory KS_Solvers/Davidson_RCI : ok
--n directory KS_Solvers/CG : ok
--n directory KS_Solvers/PPCG : ok
--n directory KS_Solvers/ParO : ok
--n directory KS_Solvers/DENSE : ok
--n directory KS_Solvers/RMM : ok
--n directory upflib : ok
--n directory XClib : ok
--n directory Modules : ok
--n directory LR_Modules : ok
--n directory PW/src : ok
--n directory CPV/src : ok
--n directory PW/tools : ok
--n directory PP/src : ok
--n directory PWCOND/src : ok
--n directory PHonon/Gamma : ok
--n directory PHonon/PH : ok
--n directory PHonon/FD : ok
--n directory HP/src : ok
--n directory atomic/src : ok
--n directory EPW/src : ok
--n directory EPW/ZG/src : ok
--n directory XSpectra/src : ok
--n directory NEB/src : ok
--n directory TDDFPT/src : ok
--n directory GWW/pw4gww : ok
--n directory GWW/gww : ok
--n directory GWW/head : ok
--n directory GWW/bse : ok
--n directory GWW/simple : ok
--n directory GWW/simple_bse : ok
--n directory GWW/simple_ip : ok
--n directory QEHeat/src : ok
--n directory KCW/src : ok
--n directory KCW/PP : ok
-
-all dependencies updated successfully
-checking build system type... aarch64-apple-darwin24.3.0
-checking ARCH... mac686
-checking setting AR... ... ar
-checking setting ARFLAGS... ... ruv
-checking for gfortran... gfortran
-checking whether the Fortran compiler works... yes
-checking for Fortran compiler default output file name... a.out
-checking for suffix of executables... 
-checking whether we are cross compiling... no
-checking for suffix of object files... o
-checking whether we are using the GNU Fortran compiler... yes
-checking whether gfortran accepts -g... yes
-checking for Fortran flag to compile .f90 files... none
-checking for mpif90... mpif90
-checking whether we are using the GNU Fortran compiler... yes
-checking whether mpif90 accepts -g... yes
-checking version of mpif90... gfortran 15.2
-setting F90... gfortran
-setting MPIF90... mpif90
-checking whether we are using the GNU C compiler... yes
-checking whether mpicc accepts -g... yes
-checking for mpicc option to accept ISO C89... none needed
-setting CC... mpicc
-setting CFLAGS... -O3
-using F90... gfortran
-setting FFLAGS... -O3 -g -fallow-argument-mismatch
-setting F90FLAGS... $(FFLAGS) -cpp
-setting FFLAGS_NOOPT... -O0 -g
-setting CPP... cpp
-setting CPPFLAGS... -P -traditional -Uvector
-setting LD... mpif90
-setting LDFLAGS... -g
-checking whether make sets $(MAKE)... yes
-checking whether Fortran files must be preprocessed... no
-setting BLAS from $BLAS_LIBS with no check ... -L/opt/homebrew/opt/veclibfort/lib -lvecLibFort -framework Accelerate
-setting BLAS_LIBS... -L/opt/homebrew/opt/veclibfort/lib -lvecLibFort -framework Accelerate
-setting LAPACK from $LAPACK_LIBS with no check ... -L/opt/homebrew/opt/veclibfort/lib -lvecLibFort -framework Accelerate
-checking FFT... checking for library containing dfftw_execute_dft... no
-in /usr/local/lib:  checking for library containing dfftw_execute_dft... no
-using internal copy of FFTW
-
-checking MASS... 
-checking for library containing mpi_init... none required
-checking for library containing pdgemr2d... no
-checking for library containing pdgemr2d... no
-checking for library containing pdgemr2d... no
-checking for library containing pdgemr2d... no
-checking for library containing pdgemr2d... no
-checking ELPA... 
-checking for Environ... not used
-checking if legacy plugins are enabled ...  no
-checking for ranlib... ranlib
-checking for wget... wget -O
-setting WGET... wget -O
-checking for git... git
-Source files are cloned from a git repository.
-On git branch HEAD
-On git commit hash 500de340b820e1cb8c05f2d8bb8fced102f377c1
-Submodule 'external/d3q' (https://github.com/anharmonic/d3q.git) registered for path 'external/d3q'
-Submodule 'external/fox' (https://github.com/pietrodelugas/fox.git) registered for path 'external/fox'
-Submodule 'external/lapack' (https://github.com/Reference-LAPACK/lapack.git) registered for path 'external/lapack'
-Submodule 'external/pw2qmcpack' (https://github.com/QMCPACK/pw2qmcpack.git) registered for path 'external/pw2qmcpack'
-Submodule 'external/qe-gipaw' (https://github.com/dceresoli/qe-gipaw) registered for path 'external/qe-gipaw'
-setting DFLAGS... -D__FFTW -D__MPI -D__MPI_MODULE
-setting IFLAGS... -I. -I$(TOPDIR)/include
-configure: creating ./config.status
-config.status: creating install/make_lapack.inc
-config.status: creating include/configure.h
-config.status: creating make.inc
-config.status: creating configure.msg
-config.status: creating install/make_wannier90.inc
---------------------------------------------------------------------
-ESPRESSO can take advantage of several optimized numerical libraries
-(essl, fftw, mkl...).  This configure script attempts to find them,
-but may fail if they have been installed in non-standard locations.
-If a required library is not found, the local copy will be compiled.
-
-The following libraries have been found:
-  BLAS_LIBS=-L/opt/homebrew/opt/veclibfort/lib -lvecLibFort -framework Accelerate
-  LAPACK_LIBS=-L/opt/homebrew/opt/veclibfort/lib -lvecLibFort -framework Accelerate
-  FFT_LIBS=
-  
-  
-
-Please check if this is what you expect.
-
-If any libraries are missing, you may specify a list of directories
-to search and retry, as follows:
-  ./configure LIBDIRS="list of directories, separated by spaces"
-
-Parallel environment detected successfully.\
-Configured for compilation of parallel executables.
-
-For more info, read the ESPRESSO User's Guide (Doc/users-guide.tex).
---------------------------------------------------------------------
-configure: success

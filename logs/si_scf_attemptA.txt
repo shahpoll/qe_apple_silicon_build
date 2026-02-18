@@ -1,2 +1,0 @@
-PP missing: place Si.pbe-n-rrkjus_psl.1.0.0.UPF under ./pp and re-run. See docs/PP.md
-Initial automation attempt aborted while inside ./pp (inputs/Si.scf.in path). Reran from workspace root.
