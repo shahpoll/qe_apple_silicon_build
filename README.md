@@ -15,16 +15,26 @@ Build, run, and validate Quantum ESPRESSO on Apple Silicon with a clean newcomer
 
 ## Quick Start
 
-### 1) Install via Homebrew (recommended)
+### Option A — Short install command (recommended)
 
 ```sh
 brew tap shahpoll/qe
-brew install shahpoll/qe/qe-macos
+brew install shahpoll/qe/qe
 ```
+
+This installs the `qe-apple-silicon-build` manager CLI via the short alias formula.
 
 Then install QE:
 
 ```sh
+qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
+```
+
+### Option B — Canonical formula name
+
+```sh
+brew tap shahpoll/qe
+brew install shahpoll/qe/qe-apple-silicon-build
 qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
 ```
 

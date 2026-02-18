@@ -91,4 +91,4 @@ git push origin "$VERSION_TAG"
 bash scripts/publish_homebrew_tap.sh --version "$VERSION_TAG" --tap-url "$TAP_URL"
 
 echo "Release publishing completed for $VERSION_TAG"
-echo "Install command: brew install shahpoll/qe/qe-macos"
+echo "Install command: brew install shahpoll/qe/qe"

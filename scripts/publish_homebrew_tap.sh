@@ -4,7 +4,7 @@ set -euo pipefail
 
 DEFAULT_TAP_URL="https://github.com/shahpoll/homebrew-qe.git"
 DEFAULT_FORMULA_NAME="qe-apple-silicon-build"
-DEFAULT_ALIASES="qe-macos"
+DEFAULT_ALIASES="qe,qe-macos"
 
 VERSION_TAG=""
 TAP_URL="$DEFAULT_TAP_URL"
@@ -27,7 +27,7 @@ Options:
   --tap-url <url>         Tap repo URL (default: https://github.com/shahpoll/homebrew-qe.git)
   --tap-dir <path>        Existing local tap clone (default: temp clone)
   --formula-name <name>   Formula filename (default: qe-apple-silicon-build)
-  --aliases <csv>         Alias names (default: qe-macos)
+  --aliases <csv>         Alias names (default: qe,qe-macos)
   --message <msg>         Commit message for tap update
   --no-push               Commit locally without pushing
   --dry-run               Preview staged tap changes
@@ -37,7 +37,7 @@ Options:
 Examples:
   bash scripts/publish_homebrew_tap.sh --version v1.2.0
   bash scripts/publish_homebrew_tap.sh --version v1.2.0 --dry-run
-  bash scripts/publish_homebrew_tap.sh --version v1.2.0 --aliases "qe-macos,qe-asb,qe-build"
+  bash scripts/publish_homebrew_tap.sh --version v1.2.0 --aliases "qe,qe-macos,qe-asb,qe-build"
 USAGE
 }
 
@@ -187,7 +187,7 @@ class ${FORMULA_CLASS} < Formula
       For full documentation, see:
         https://github.com/shahpoll/qe_apple_silicon_build
 
-      Tip: for a one-command QE install (compiles from source), try:
+      Tip: short alias install (if enabled in this tap):
         brew install shahpoll/qe/qe
     EOS
   end
@@ -199,13 +199,18 @@ end
 EOF
 
 mkdir -p "$TAP_DIR/Aliases"
+find "$TAP_DIR/Aliases" -type l -delete
 IFS=',' read -r -a ALIAS_LIST <<< "$ALIASES"
+PRIMARY_ALIAS=""
 for alias in "${ALIAS_LIST[@]}"; do
   alias=$(echo "$alias" | tr -d '[:space:]')
   if [[ -z "$alias" || "$alias" == "$FORMULA_NAME" ]]; then
     continue
   fi
   ln -snf "../Formula/${FORMULA_NAME}.rb" "$TAP_DIR/Aliases/$alias"
+  if [[ -z "$PRIMARY_ALIAS" ]]; then
+    PRIMARY_ALIAS="$alias"
+  fi
 done
 
 README_PATH="$TAP_DIR/README.md"
@@ -215,19 +220,23 @@ if [[ ! -f "$README_PATH" ]]; then
 
 Homebrew tap for QE Apple Silicon build tooling.
 
-Install:
+Install (canonical formula):
 
 \`\`\`sh
 brew tap shahpoll/qe
 brew install shahpoll/qe/${FORMULA_NAME}
 \`\`\`
+EOF
+  if [[ -n "$PRIMARY_ALIAS" ]]; then
+    cat >> "$README_PATH" <<EOF
 
-Short aliases (if enabled):
+Short alias:
 
 \`\`\`sh
-brew install shahpoll/qe/qe-macos
+brew install shahpoll/qe/${PRIMARY_ALIAS}
 \`\`\`
 EOF
+  fi
 fi
 
 git -C "$TAP_DIR" add Formula Aliases README.md

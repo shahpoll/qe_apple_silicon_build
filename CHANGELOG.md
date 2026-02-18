@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI migration workflow now triggers when `cases/**` or `inputs/**` change.
 - Install docs now include a required preflight step for CLT and minimum free disk.
 - Local development formula comments clarified to match current tap release flow.
+- Homebrew docs and publisher defaults now include both `qe` and `qe-macos` aliases.
+- Quick-start install commands now consistently distinguish alias vs canonical formula names.
 
 ## [1.2.0] - 2026-02-16
 
