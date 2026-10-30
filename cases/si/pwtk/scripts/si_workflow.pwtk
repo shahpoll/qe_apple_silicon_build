@@ -34,23 +34,6 @@ K_POINTS automatic {
 
 runPW pw.si.scf
 
-# NSCF for DOS/PDOS
-input_pushpop {
-    CONTROL {
-        calculation = 'nscf'
-    }
-    SYSTEM {
-        occupations = 'fixed'
-        nbnd        = 36
-        ecutwfc     = 30.0
-        ecutrho     = 240.0
-    }
-    K_POINTS automatic {
-        12 12 12  0 0 0
-    }
-    runPW pw.si.nscf
-}
-
 # Band structure (Gamma-X-W-K-Gamma-L path)
 input_pushpop {
     CONTROL {
@@ -74,9 +57,30 @@ BANDS {
 }
 runBANDS bands.si
 
+# NSCF for DOS/PDOS
+input_pushpop {
+    CONTROL {
+        calculation = 'nscf'
+    }
+    SYSTEM {
+        occupations = 'fixed'
+        nbnd        = 36
+        ecutwfc     = 30.0
+        ecutrho     = 240.0
+    }
+    K_POINTS automatic {
+        12 12 12  0 0 0
+    }
+    runPW pw.si.nscf
+}
+
+
 # Total DOS
 DOS {
     prefix = 'silicon'
+    outdir = './tmp'
+    ngauss = 0
+    degauss = 0.001470
     Emin   = -15.0
     Emax   = 20.0
     DeltaE = 0.02
@@ -87,6 +91,8 @@ runDOS dos.si
 # Projected DOS
 PROJWFC {
     prefix  = 'silicon'
+    outdir  = './tmp'
+    ngauss  = 0
     degauss = 0.02
     Emin    = -10.0
     Emax    = 15.0

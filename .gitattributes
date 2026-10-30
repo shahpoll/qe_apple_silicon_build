@@ -3,3 +3,7 @@ analysis/Si/data/*.dos text
 analysis/Si/data/*.dat text
 analysis/Si/data/silicon.pdos_* text
 analysis/Si/logs/* text
+
+# Archived evidence and pinned upstream fixtures retain their exact bytes.
+docs/audit/** -whitespace
+fixtures/upstream-qe75/** -whitespace

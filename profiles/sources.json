@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "qe-7.5": {
+    "url": "https://gitlab.com/QEF/q-e/-/archive/qe-7.5/q-e-qe-7.5.tar.gz",
+    "sha256": "7e1f7a9a21b63192f5135218bee20a5321b66582e4756536681b76e9c59b3cc8",
+    "root": "q-e-qe-7.5",
+    "provenance": "Official HTTPS archive authenticated and frozen before candidate build"
+  },
+  "pwtk-3.2": {
+    "url": "https://pwtk.ijs.si/download/pwtk-3.2.tar.gz",
+    "sha256": "51c7bb3ed714293871cb6544fe5a8f65659e7084fc3351721fa0a70e226b5842",
+    "root": "pwtk-3.2"
+  }
+}

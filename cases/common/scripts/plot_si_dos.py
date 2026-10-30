@@ -21,6 +21,9 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import sys
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[3]/"scripts"))
+from qe_validation.analysis import dataset
 from typing import Tuple
 
 import matplotlib.pyplot as plt
@@ -32,15 +35,16 @@ PT_BASE = ROOT / "cases" / "si" / "pwtk"
 
 
 def workflow_label(base: pathlib.Path) -> str:
-    if base.samefile(DEFAULT_BASE):
+    if base.resolve() == DEFAULT_BASE.resolve():
         return "Manual QE workflow (Accelerate, M4)"
-    if base.samefile(PT_BASE):
+    if base.resolve() == PT_BASE.resolve():
         return "PWTK-driven QE workflow (Accelerate, M4)"
     return f"Custom run: {base}"
 
 
 def compute_paths(base: pathlib.Path | None) -> Tuple[pathlib.Path, pathlib.Path]:
-    base_dir = DEFAULT_BASE if base is None else base
+    dataset(base)
+    base_dir = base
     return base_dir / "data" / "silicon.dos", base_dir / "plots" / "si_total_dos.png"
 
 
@@ -71,7 +75,8 @@ def load_dos(path: pathlib.Path) -> Tuple[np.ndarray, np.ndarray, float | None]:
 
 def main(base: pathlib.Path | None = None) -> None:
     dos_file, out_png = compute_paths(base)
-    base_dir = DEFAULT_BASE if base is None else base
+    dataset(base)
+    base_dir = base
     energies, dos, fermi = load_dos(dos_file)
 
     if fermi is None:
@@ -86,7 +91,7 @@ def main(base: pathlib.Path | None = None) -> None:
     ax.set_ylabel("DOS (states/eV)")
     ax.set_title(f"Silicon total DOS — {workflow_label(base_dir)}")
     ax.set_xlim(energies[0], energies[-1])
-    ax.set_ylim(bottom=0)
+
     ax.legend(frameon=False)
     ax.text(
         0.02,

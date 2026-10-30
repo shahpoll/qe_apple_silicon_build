@@ -1,49 +1,21 @@
-# Documentation Hub
+# Documentation
 
-This folder is organized for first-time users first, then deeper references.
+## Start here
 
-## Start Here
+| Guide | Use it for |
+|---|---|
+| [Project overview](../README.md) | What the project does and the three-step quick start |
+| [Installation](INSTALL.md) | Existing tools, curl setup, paths, checksums, and updates |
+| [Example workflows](Workflow_Basics.md) | Fresh silicon data and manual/PWTK comparison |
+| [Validation status](VALIDATION.md) | Tested scope, dated evidence, and known failures |
+| [Troubleshooting](Troubleshooting.md) | Typed failures and practical next steps |
+| [Commands](Command_Reference.md) | CLI options and explicit activation/rollback |
+| [Pseudopotentials](PP.md) | Reference identity and convergence |
 
-1. `Workflow_Basics.md`
-2. `Troubleshooting.md`
-3. `Release_Checklist.md`
+## For contributors and maintainers
 
-## Guide Map
+See [contributing](../CONTRIBUTING.md), the [release checklist](Release_Checklist.md), and the [changelog](../CHANGELOG.md).
 
-- `Workflow_Basics.md`
-  - Beginner path: install, run silicon workflow, validate.
-- `Troubleshooting.md`
-  - Common build/runtime failures and exact fixes.
-- `Command_Reference.md`
-  - Fast command cheat sheet for install/run/validate workflows.
-- `Homebrew_Tap.md`
-  - How to publish and maintain the tap for one-command `brew install`.
-- `PP.md`
-  - Pseudopotential notes and cutoff guidance.
-- `Release_Checklist.md`
-  - Pre-push checklist for clean reproducible updates.
+The [October device record](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/implementation-status-2026-10-15.md), [September audit](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/audit/2026-09-30/AUDIT_AND_PLAN.md), and [implementation plan](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/implementation-plan/START_HERE.md) preserve the audit trail. They contain historical commands and maintainer-local evidence paths; use the guides above for current installation instructions.
 
-## Legacy Material
-
-Older long-form notes are kept under `archive/`:
-
-- `archive/AppleSilicon_QE_Guide.md`
-- `archive/Guide.md`
-- `archive/Si_Worklog.md`
-
-These are useful for historical context but are not the main onboarding path.
-
-## Wiki Mirror
-
-`wiki/` contains pages that can be copied into the GitHub wiki with minimal edits.
-
-To publish them to the actual GitHub wiki repository:
-
-```sh
-git clone https://github.com/shahpoll/qe_apple_silicon_build.wiki.git /tmp/qe_wiki
-cp docs/wiki/*.md /tmp/qe_wiki/
-cd /tmp/qe_wiki
-git add .
-git commit -m "Update wiki pages"
-git push
-```
+[Archived guides](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/archive/README.md) and the [wiki mirror](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/wiki/README.md) are retained for context. Publishing this repository does not automatically synchronize the separate GitHub wiki.

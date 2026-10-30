@@ -1,0 +1,331 @@
+{
+  "method": "Synthetic fault injection into production validator; no real QE execution.",
+  "source": "scripts/validate_build.py",
+  "wrong_numbers_and_nonconvergence": {
+    "exit_code": 0,
+    "pass_count": 42,
+    "fail_count": 0,
+    "selected_cases": [
+      {
+        "case": "pw_scf",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "pw_scf_ph",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "scf_rank_1",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_rank_2",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_repeat_1",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_repeat_2",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "module_cp_launch",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=99"
+      },
+      {
+        "case": "neb_path_mini",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=1"
+      },
+      {
+        "case": "epw_interp",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "interpolation mode"
+      }
+    ],
+    "metrics": [
+      {
+        "metric": "SCF total energy (Ry)",
+        "reference": "-22.8392719800",
+        "observed": "-17.8392719800",
+        "delta(observed-reference)": "5.0000000000"
+      },
+      {
+        "metric": "SCF Fermi (eV)",
+        "reference": "6.4346000000",
+        "observed": "99.0000000000",
+        "delta(observed-reference)": "92.5654000000"
+      },
+      {
+        "metric": "DOS EFermi (eV)",
+        "reference": "6.2130000000",
+        "observed": "6.2130000000",
+        "delta(observed-reference)": "0.0000000000"
+      },
+      {
+        "metric": "Indirect gap (eV)",
+        "reference": "0.5720000000",
+        "observed": "8.0000000000",
+        "delta(observed-reference)": "7.4280000000"
+      },
+      {
+        "metric": "Direct gap (eV)",
+        "reference": "2.5625000000",
+        "observed": "8.0000000000",
+        "delta(observed-reference)": "5.4375000000"
+      }
+    ],
+    "rank_runs": [
+      {
+        "label": "rank_1",
+        "ranks": "1",
+        "total_energy_ry": "-21.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      },
+      {
+        "label": "rank_2",
+        "ranks": "2",
+        "total_energy_ry": "-20.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      }
+    ],
+    "repeat_runs": [
+      {
+        "label": "repeat_1",
+        "ranks": "2",
+        "total_energy_ry": "-21.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      },
+      {
+        "label": "repeat_2",
+        "ranks": "2",
+        "total_energy_ry": "-20.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      }
+    ]
+  },
+  "unavailable_metrics": {
+    "exit_code": 0,
+    "pass_count": 42,
+    "fail_count": 0,
+    "selected_cases": [
+      {
+        "case": "pw_scf",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "pw_scf_ph",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "scf_rank_1",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_rank_2",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_repeat_1",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "scf_repeat_2",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "OK"
+      },
+      {
+        "case": "module_cp_launch",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=99"
+      },
+      {
+        "case": "neb_path_mini",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=1"
+      },
+      {
+        "case": "epw_interp",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "interpolation mode"
+      }
+    ],
+    "metrics": [
+      {
+        "metric": "ERROR",
+        "reference": "NA",
+        "observed": "NA",
+        "delta(observed-reference)": "injected missing metrics"
+      }
+    ],
+    "rank_runs": [
+      {
+        "label": "rank_1",
+        "ranks": "1",
+        "total_energy_ry": "-21.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      },
+      {
+        "label": "rank_2",
+        "ranks": "2",
+        "total_energy_ry": "-20.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      }
+    ],
+    "repeat_runs": [
+      {
+        "label": "repeat_1",
+        "ranks": "2",
+        "total_energy_ry": "-21.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      },
+      {
+        "label": "repeat_2",
+        "ranks": "2",
+        "total_energy_ry": "-20.0000000000",
+        "fermi_ev": "99.000000",
+        "duration_s": "0.010"
+      }
+    ]
+  },
+  "empty_reproducibility": {
+    "exit_code": 0,
+    "pass_count": 38,
+    "fail_count": 0,
+    "selected_cases": [
+      {
+        "case": "pw_scf",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "pw_scf_ph",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "ranks=2"
+      },
+      {
+        "case": "module_cp_launch",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=99"
+      },
+      {
+        "case": "neb_path_mini",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "exit=1"
+      },
+      {
+        "case": "epw_interp",
+        "status": "PASS",
+        "duration_s": "0.01",
+        "note": "interpolation mode"
+      }
+    ],
+    "metrics": [
+      {
+        "metric": "SCF total energy (Ry)",
+        "reference": "-22.8392719800",
+        "observed": "-17.8392719800",
+        "delta(observed-reference)": "5.0000000000"
+      },
+      {
+        "metric": "SCF Fermi (eV)",
+        "reference": "6.4346000000",
+        "observed": "99.0000000000",
+        "delta(observed-reference)": "92.5654000000"
+      },
+      {
+        "metric": "DOS EFermi (eV)",
+        "reference": "6.2130000000",
+        "observed": "6.2130000000",
+        "delta(observed-reference)": "0.0000000000"
+      },
+      {
+        "metric": "Indirect gap (eV)",
+        "reference": "0.5720000000",
+        "observed": "8.0000000000",
+        "delta(observed-reference)": "7.4280000000"
+      },
+      {
+        "metric": "Direct gap (eV)",
+        "reference": "2.5625000000",
+        "observed": "8.0000000000",
+        "delta(observed-reference)": "5.4375000000"
+      }
+    ],
+    "rank_runs": [],
+    "repeat_runs": []
+  },
+  "serial_fallback": {
+    "requested_ranks": 8,
+    "return_code": 0,
+    "executed_commands": [
+      [
+        "mpirun",
+        "-np",
+        "8",
+        "--bind-to",
+        "none",
+        "pw.x",
+        "-in",
+        "unused.in"
+      ],
+      [
+        "pw.x",
+        "-in",
+        "unused.in"
+      ]
+    ],
+    "returned_metadata": [
+      "return_code",
+      "duration"
+    ]
+  },
+  "parser_acceptance": {
+    "first_not_last_energy": -20.0,
+    "nonfinite_energy": "nan",
+    "nonfinite_fermi": "inf"
+  }
+}

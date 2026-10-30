@@ -1,0 +1,39 @@
+{
+  "binary": "/Users/pollob/opt/qe-7.5/bin/pw.x",
+  "binary_sha256": "71b4ae20fc3a89054cdc93bbfc210ddd3ba4d488f5de2b0123a67b656c3064df",
+  "pseudopotential_sha256": "669fb75395a9d26973b0ea1ce8223bbcb30d3396c5d48bf5e794d1243c52375a",
+  "input_sha256": "f16c530eb4517d42ed47f207ea5f69e571ea7039b9600145f1b21e6a1120c931",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "results": [
+    {
+      "label": "direct",
+      "requested_ranks": 1,
+      "returncode": 0,
+      "seconds": 2.357,
+      "actual_ranks": [
+        "1"
+      ],
+      "converged": true,
+      "job_done": true,
+      "energy_ry": "-22.83927198",
+      "fermi_ev": "6.4346",
+      "fallback": false
+    },
+    {
+      "label": "mpi2",
+      "requested_ranks": 2,
+      "returncode": 213,
+      "seconds": 0.717,
+      "actual_ranks": [],
+      "converged": false,
+      "job_done": false,
+      "energy_ry": null,
+      "fermi_ev": null,
+      "fallback": false
+    }
+  ]
+}

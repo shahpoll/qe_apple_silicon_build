@@ -1,0 +1,62 @@
+{
+  "scope": "Archived artifacts and formula replay; no new QE calculations",
+  "path_base": "qe_macos15_build",
+  "projection_dataset": {
+    "manual": {
+      "source": "cases/si/manual/logs/si_projwfc.txt",
+      "nbnd": 36,
+      "nkstot": 72
+    },
+    "pwtk": {
+      "source": "cases/si/pwtk/logs/si_projwfc.txt",
+      "nbnd": 8,
+      "nkstot": 201
+    },
+    "finding": "PWTK PDOS consumes 201 band-path points and 8 bands, not the advertised uniform NSCF dataset with 36 bands"
+  },
+  "dos_comparison": {
+    "sources": [
+      "cases/si/manual/data/silicon.dos",
+      "cases/si/pwtk/data/silicon.dos"
+    ],
+    "rows": 1751,
+    "energy_grid_max_difference_eV": 0.0,
+    "max_absolute_difference_states_per_eV": 5.6258,
+    "ratio_selection": "Both densities > 1e-6 states/eV",
+    "ratio_rows": 1057,
+    "ratio_percentile_method": "Sorted sample at int(p * sample_count); median uses statistics.median",
+    "manual_over_pwtk_ratio_p05": 0.002441274136022629,
+    "manual_over_pwtk_ratio_median": 1.195992485911083,
+    "manual_over_pwtk_ratio_p95": 77.33357784705666,
+    "median_scaled_max_residual_states_per_eV": 6.772356042579836,
+    "finding": "The archived curves do not differ by a constant normalization factor"
+  },
+  "direct_gap_formula": {
+    "source_formula": "cases/si/convergence/run_convergence.py:160-167",
+    "data_source": "cases/si/convergence/cutoff/cutoff_30/silicon.bands.dat.gnu",
+    "fermi_source": "cases/si/convergence/cutoff/cutoff_30/scf.out",
+    "fermi_eV": 6.4571,
+    "current_formula_eV": "inf",
+    "corrected_per_k_reduction_eV": 2.5599999999999996,
+    "finding": "Elementwise masked-band subtraction produces infinity; this field is currently omitted from serialized tables"
+  },
+  "cutoff_mesh": {
+    "claim_source": "cases/si/convergence/README.md",
+    "input_source": "cases/si/convergence/cutoff/cutoff_30/scf.in",
+    "table_source": "cases/si/convergence/cutoff/cutoff.json",
+    "readme_claim": [
+      8,
+      8,
+      8
+    ],
+    "actual_input": [
+      6,
+      6,
+      6
+    ],
+    "archived_table_meshes": [
+      6.0
+    ],
+    "finding": "README says 8x8x8; archived cutoff calculations use 6x6x6"
+  }
+}

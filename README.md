@@ -1,162 +1,91 @@
-# QE Apple Silicon Build
+# Quantum ESPRESSO on Apple Silicon
 
-Build, run, and validate Quantum ESPRESSO on Apple Silicon with a clean newcomer workflow.
+[![Checks](https://github.com/shahpoll/qe_apple_silicon_build/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/shahpoll/qe_apple_silicon_build/actions/workflows/checks.yml)
+[![QE 7.5](https://img.shields.io/badge/Quantum_ESPRESSO-7.5-blue)](https://www.quantum-espresso.org/)
+[![MIT](https://img.shields.io/badge/installer-MIT-green)](LICENSE)
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![macOS](https://img.shields.io/badge/macOS-26%2B-lightgrey?logo=apple)
-![QE](https://img.shields.io/badge/QE-7.5-orange)
-![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-M1%2FM2%2FM3%2FM4-green)
+Build **Quantum ESPRESSO 7.5** on a Mac with Apple Silicon, check the installation with real calculations, and keep a clear record of what passed and what failed.
 
-- **Current baseline:** macOS 26 + QE 7.5
-- **Focus:** reproducible CPU workflows (SCF/BANDS/DOS/PDOS/phonons + HP/NEB/EPW mini-workflows)
-- **Previous repository name:** `qe_macos15_build` (now `qe_apple_silicon_build`)
+Quantum ESPRESSO is a collection of scientific programs for electronic-structure calculations. This project provides the installation manager and reproducible example workflows around it. It downloads verified source archives and compiles QE locally using your existing tools.
 
----
+**Preview release:** [v2.0.0-rc.1](https://github.com/shahpoll/qe_apple_silicon_build/releases/tag/v2.0.0-rc.1). The core workflow has been tested on an M4 running macOS 26.3. Advanced calculations have known failures and missing references; see [validation status](docs/VALIDATION.md).
 
-## Quick Start
+[Installation guide](docs/INSTALL.md) · [Example workflows](docs/Workflow_Basics.md) · [Troubleshooting](docs/Troubleshooting.md) · [Command reference](docs/Command_Reference.md)
 
-### Option A — Short install command (recommended)
+## Before you start
 
-```sh
-brew tap shahpoll/qe
-brew install shahpoll/qe/qe
-```
+You need a **native Apple Silicon macOS environment** and these tools already installed:
 
-This installs the `qe-apple-silicon-build` manager CLI via the short alias formula.
-
-Then install QE:
-
-```sh
-qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-```
-
-### Option B — Canonical formula name
-
-```sh
-brew tap shahpoll/qe
-brew install shahpoll/qe/qe-apple-silicon-build
-qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-```
-
-### 2) Or clone and run directly
-
-```sh
-git clone https://github.com/shahpoll/qe_apple_silicon_build.git
-cd qe_apple_silicon_build
-bash scripts/qe_manager.sh
-```
-
----
-
-## Preflight (required once per machine)
-
-Before running install commands:
-
-- Install Apple Command Line Tools: `xcode-select --install`
-- Keep at least ~12 GB free on `/` (CLT + Homebrew dependency downloads are large)
-- Confirm active developer tools path: `xcode-select -p`
-
----
-
-## Commands
-
-After installing via Homebrew, you have a single CLI entrypoint:
-
-| Command | What it does |
+| Requirement | Purpose |
 |---|---|
-| `qe-apple-silicon-build install ...` | Install QE from source |
-| `qe-apple-silicon-build update ...` | Update an existing QE build |
-| `qe-apple-silicon-build check --qe-bin ...` | Run CI-style validation |
-| `qe-apple-silicon-build smoke --ranks 2` | Quick smoke test |
-| `qe-apple-silicon-build menu` | Interactive install/update flow |
+| Apple Command Line Tools | C compiler, SDK, and development utilities |
+| Python 3.12 or newer | Installer and validation commands |
+| curl, Git, and CMake | Download and build the source |
+| gfortran and a compatible MPI installation | Fortran compiler plus `mpicc`, `mpif90`, and `mpirun` |
+| An existing OpenBLAS library | BLAS/LAPACK numerical routines |
+| At least 8 GiB free for a clean build | Source, build files, and retained evidence |
 
-**Non-interactive install:**
+The installer **does not require or invoke Homebrew** and does not install compilers or upgrade shared libraries. Starting with a stock Mac? Read [prerequisites](docs/INSTALL.md#prerequisites) first. NumPy and Matplotlib are optional plotting tools; numerical checks use Python's standard library.
+
+## Quick start
+
+### 1. Install the manager
+
+Download the preview installer, then run it:
 
 ```sh
-qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5" --with-pwtk
+curl --fail --location --proto '=https' --proto-redir '=https' \
+  https://github.com/shahpoll/qe_apple_silicon_build/releases/download/v2.0.0-rc.1/install.sh \
+  --output qe-install.sh
+bash qe-install.sh
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
-**Validate the build:**
+This installs the small manager. **QE itself is built in the next step.** The installer obtains the versioned release manifest and verifies the manager archive's SHA256 before extraction. It saves its download and installation logs.
+
+### 2. Check your tools and build QE
+
+Replace the example below with the path to your **existing** OpenBLAS library:
 
 ```sh
-qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
+export QE_BLAS_LIBRARY="/absolute/path/to/libopenblas.dylib"
+qe-apple-silicon-build doctor
+qe-apple-silicon-build install --profile core --jobs 2 --activate
 ```
 
-Outputs are written under `validation_reports/`.
+`doctor` checks prerequisites without changing them. The build uses a new directory, records its dependencies, and runs the complete core qualification before selecting the new version. A failed check leaves the candidate inactive. Existing QE installations are preserved.
 
----
+### 3. Use the qualified installation
 
-## What Gets Validated
+```sh
+export QE_BIN_PATH="$HOME/.local/share/qe/current/bin"
+qe-apple-silicon-build smoke --qe-bin "$QE_BIN_PATH" --ranks 2
+```
 
-The validator (`scripts/validate_build.py`) runs:
+A successful smoke check reports `PASS` and the evidence directory. For a first complete example, follow the [silicon workflow guide](docs/Workflow_Basics.md). Run `qe-apple-silicon-build help` to see all commands.
 
-- Core silicon pipeline: `pw.x`, `bands.x`, `dos.x`, `projwfc.x`, `pp.x`
-- Phonon chain: `ph.x`, `q2r.x`, `matdyn.x`
-- Wrapper and linkage checks
-- Reproducibility: rank sweep + repeatability
-- Optional module launch checks
-- Deeper mini-workflows:
-  - `hp.x`: Hubbard perturbation setup path
-  - `neb.x`: short real path optimization with barrier extraction
-  - `epw.x`: SCF/NSCF + Wannier + EPW interpolation sanity path
+To keep the manager on your PATH in future terminals, add `export PATH="$HOME/.local/bin:$PATH"` to your shell configuration. Custom prefixes, offline installation, checksums, and updates are covered in the [installation guide](docs/INSTALL.md).
 
-Generated evidence includes TSV matrices, plots, and `VALIDATION_REPORT.md`.
+## What is checked?
 
----
+The recommended **core profile** covers SCF, bands, uniform NSCF, DOS, projected DOS, charge density, and phonon processing. It also requires actual MPI runs with 1, 2, and 4 ranks and three repeated calculations. PW/PH use the requested pipeline ranks; postprocessors use one managed MPI rank in this tested profile.
 
-## Repository Map
+The October 15 device study recorded **21 core checks**, **62 convergence checks**, and **11 force/stress consistency checks** passing. The broader upstream catalog recorded **33 passed, 17 blocked, and one failed**. The methane Lanczos response produced NaN, so its dependent spectrum was blocked. These are dated results for specific inputs and one device, not a guarantee for every material or QE option. The CI badge checks the tooling; it does not certify physical accuracy.
 
-| Path | Purpose |
-|---|---|
-| `scripts/qe_manager.sh` | One-command install/update orchestration |
-| `scripts/ci_migration_check.sh` | One-command smoke + full validation |
-| `scripts/validate_build.py` | Validation campaign generator |
-| `scripts/run_qe.sh` | MPI wrapper for QE executables |
-| `bin/qe-apple-silicon-build` | User-facing CLI entrypoint |
-| `Formula/qe-apple-silicon-build.rb` | Homebrew formula (local/HEAD install) |
-| `cases/si/manual` | Manual silicon workflow |
-| `cases/si/pwtk` | PWTK-driven workflow |
-| `cases/si/comparison` | Manual vs PWTK comparisons |
-| `cases/si/convergence` | Cutoff and k-mesh convergence studies |
-| `docs/` | Beginner docs, troubleshooting, release guidance |
-| `docs/wiki/` | Wiki-ready mirror pages |
+Read [validation status and known limits](docs/VALIDATION.md) before using an advanced module or starting production science.
 
-Note: GitHub wiki content is a separate `.wiki.git` repo. See `docs/wiki/README.md` for sync steps.
+## Your results stay separate
 
----
+New runs default to `~/.local/state/qe/runs/`. Each has its own inputs, commands, logs, numerical assertions, and report. You can select a **new external directory** with `--out-dir`; an existing directory is refused. Failed attempts are retained, and MPI failures are never silently replaced with serial execution.
 
-## For Newcomers
+```sh
+qe-apple-silicon-build status /path/to/your/run
+```
 
-Start here in this order:
+Builds, convergence studies, and retained wavefunctions can use several additional GiB. See [files and recovery](docs/INSTALL.md#files-and-recovery) for what is stored and how updates work.
 
-1. `docs/Workflow_Basics.md`
-2. `docs/Troubleshooting.md`
-3. `docs/Release_Checklist.md` (before publishing)
+## Contributing
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development checks and evidence requirements. The [changelog](CHANGELOG.md) describes the curl migration. Detailed audits and historical plans are available from the [documentation index](docs/README.md).
 
-## Notes and Limits
-
-- Apple GPU acceleration is not available in QE (CPU-only on Apple Silicon).
-- Keep `OMP_NUM_THREADS=1` unless you are intentionally running hybrid MPI/OpenMP tests.
-- Prefer QE 7.5 for macOS 26 stability.
-
----
-
-## Documentation Index
-
-- [`docs/README.md`](docs/README.md)
-- [`docs/Workflow_Basics.md`](docs/Workflow_Basics.md)
-- [`docs/Command_Reference.md`](docs/Command_Reference.md)
-- [`docs/Troubleshooting.md`](docs/Troubleshooting.md)
-- [`docs/PP.md`](docs/PP.md)
-- [`docs/Release_Checklist.md`](docs/Release_Checklist.md)
-- [`docs/archive/`](docs/archive/) — legacy notes and historical worklogs
-- [`CONTRIBUTING.md`](CONTRIBUTING.md)
-
----
-
-## License and Citation
-
-- License: [`LICENSE`](LICENSE) (MIT)
-- Citation metadata: [`CITATION.cff`](CITATION.cff)
+The installer and project tooling use the [MIT license](LICENSE). Quantum ESPRESSO and bundled upstream reference material retain their own licenses; see the [reference fixture license](fixtures/upstream-qe75/pw_scf/UPSTREAM_LICENSE). This is a community project, independent of the Quantum ESPRESSO developers.

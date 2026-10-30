@@ -5,15 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0-rc.1] - 2026-10-30
+
+This preview replaces the former Homebrew distribution path with a curl-installed manager using existing native tools. The core profile is the recommended starting point; comprehensive scientific qualification remains incomplete.
+
+### Added
+
+- Versioned manager archive, release manifest, and SHA256 checksums.
+- Read-only `doctor` prerequisite check and a beginner installation guide.
+- Standard-library validation, frozen case inventories, finite-value checks, actual MPI-rank verification, and preserved success/failure evidence.
+- Fresh dataset manifests, strict manual/PWTK comparisons, corrected gap/convergence analysis, and selected physical reference contracts.
+- Hosted macOS tooling CI and a separate manual device-qualification workflow.
 
 ### Changed
 
-- CI migration workflow now triggers when `cases/**` or `inputs/**` change.
-- Install docs now include a required preflight step for CLT and minimum free disk.
-- Local development formula comments clarified to match current tap release flow.
-- Homebrew docs and publisher defaults now include both `qe` and `qe-macos` aliases.
-- Quick-start install commands now consistently distinguish alias vs canonical formula names.
+- Builds create versioned suites with complete dependency inventories. Core activation requires its full numerical qualification; rollback rechecks identity.
+- Canonical workflows process bands before uniform NSCF, so DOS/PDOS use the intended parent dataset.
+- README and documentation now distinguish installation, execution, convergence, numerical agreement, and scientific adequacy.
+
+### Removed
+
+- Supported Homebrew Formula, Brewfile, and tap publishing scripts.
+- Automatic serial fallback, generic retries, implicit historical-data analysis, and plotting dependencies for numerical verdicts.
+
+### Known limitations
+
+- The October device catalog recorded 33 passed cases, 17 blocked cases, and a methane Lanczos NaN failure. Missing exact references, some execution layouts, and independent comprehensive review remain open. See [validation status](docs/VALIDATION.md).
 
 ## [1.2.0] - 2026-02-16
 

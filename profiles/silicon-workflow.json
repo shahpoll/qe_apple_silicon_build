@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "id": "canonical-silicon-workflow",
+  "files": {
+    "inputs/Si.scf.in": "f16c530eb4517d42ed47f207ea5f69e571ea7039b9600145f1b21e6a1120c931",
+    "inputs/Si.bands.in": "68da44d78e2a025fcaf55384eb365afa3ba4842682c8cb04ea604f3b4565250d",
+    "inputs/Si.bands_post.in": "9a675b07b207d9cfb801d1f90324dec89fbeb70b158a001f7d84458a3c8b0b90",
+    "inputs/Si.nscf.in": "7dcf0ef45a73a64fa752a8fa377798fd6d23b8a206a8a5843cbb13982becac15",
+    "inputs/Si.dos.in": "e88b9e1919ea7f6a5d122bfd434eefade34b67e8b824a0e5f15e38d4f6226110",
+    "inputs/Si.projwfc.in": "a90e15916cc3bd2e1ce1e85dd84eddb65364b539a1caf274e454ef45cd7e9775",
+    "cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF": "669fb75395a9d26973b0ea1ce8223bbcb30d3396c5d48bf5e794d1243c52375a"
+  },
+  "scope": "Pinned reference workflow; changed physics requires a new explicit contract"
+}

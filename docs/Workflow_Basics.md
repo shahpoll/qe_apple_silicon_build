@@ -1,90 +1,13 @@
-# Beginner Workflow (Apple Silicon)
+# Curl build and validation workflow
 
-This is the shortest reliable path for a newcomer.
+Use the curl installation instructions in the repository README. Existing native tools are required; the installer never invokes Homebrew or modifies shared dependency installations.
 
-## 0) Clone the repository
+1. Build into a dedicated versioned prefix with `install --backend openblas --blas-library /absolute/path/libopenblas.dylib --install-prefix /absolute/path/qe --jobs 2`. Retain the complete build output and its inactive candidate path.
+2. Run `check --qe-bin /absolute/path/candidate/bin --out-dir /absolute/path/new-check` in an environment permitting local MPI. Actual ranks 1/2/4 and three repeats are required. A serial diagnostic cannot substitute for an MPI case.
+3. For the reference silicon dataset, run `workflow --qe-bin ... --out-dir /absolute/path/new-manual`. It writes identified data and logs under that owned run directory. Do not run postprocessors in the bundled example directories or copy old results into a new run.
+4. For PWTK, use the same workflow command with `--engine pwtk --pwtk /absolute/path/pwtk --tclsh /absolute/path/tclsh8.6`. Compare the two new run directories using `cases/common/scripts/compare_si_runs.py` and a new comparison output directory.
+5. Optional plots accept `--base /absolute/path/new-run`; choose a Python environment already containing NumPy/Matplotlib. Plotting errors do not change scientific verdicts.
+6. Run observable-specific convergence with a stated error budget before production science. Cutoffs, mesh, smearing, bands, functional, geometry, and UPF changes are explicit variants. Keep failed studies and original tolerances.
+7. Numerical activation requires matching release and qualification scope. Leave incomplete workstation candidates inactive. Use `status` to inspect an interrupted run and preserve its evidence before a new attempt.
 
-```sh
-git clone https://github.com/shahpoll/qe_apple_silicon_build.git
-cd qe_apple_silicon_build
-```
-
-## 1) Install QE (one command)
-
-Interactive:
-
-```sh
-bash scripts/qe_manager.sh
-```
-
-Non-interactive:
-
-```sh
-bash scripts/qe_manager.sh install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5" --with-pwtk
-```
-
-What this does:
-
-- installs Homebrew dependencies from `Brewfile`
-- fetches QE sources
-- builds the QE binaries
-- optionally fetches PWTK
-
-## 2) Configure runtime environment
-
-```sh
-export QE_RANKS=8
-export QE_CPUSET=0-9
-export OMP_NUM_THREADS=1
-```
-
-Use fewer ranks for quiet test runs (for example, `QE_RANKS=2`).
-
-## 3) Run the silicon reference workflow
-
-```sh
-cd cases/si/manual
-
-../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in | tee logs/si_scf.txt
-../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in | tee logs/si_bands_pw.txt
-../../../scripts/run_qe.sh bands.x -- -in data/Si.bands_post.in | tee logs/si_bands_post.txt
-../../../scripts/run_qe.sh pw.x -- -in data/Si.nscf.in | tee logs/si_nscf_pw.txt
-../../../scripts/run_qe.sh dos.x -- -in data/Si.dos.in | tee logs/si_dos.txt
-../../../scripts/run_qe.sh projwfc.x -- -in data/Si.projwfc.in | tee logs/si_projwfc.txt
-
-python3 scripts/plot_bands.py
-python3 scripts/plot_dos.py
-python3 scripts/plot_pdos.py
-python3 scripts/analyze_bandgap.py
-```
-
-Outputs:
-
-- raw data: `cases/si/manual/data/`
-- logs: `cases/si/manual/logs/`
-- plots: `cases/si/manual/plots/`
-
-## 4) Validate migration/build stability
-
-```sh
-cd ../../..
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-Check these files:
-
-- `validation_reports/ci_migration_check/VALIDATION_REPORT.md`
-- `validation_reports/ci_migration_check/tables/final_matrix.tsv`
-- `validation_reports/ci_migration_check/plots/`
-
-## 5) Optional brew-style command
-
-```sh
-brew install --HEAD ./Formula/qe-apple-silicon-build.rb
-qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-## 6) If something fails
-
-Go to `Troubleshooting.md` first.
+On failure, inspect the typed reason in the case's `failure.json`, its exact input, command, reference identity, stdout/stderr, and parent hashes. Diagnose before a new attempt. Every new attempt uses a new directory. Unknown or missing quantities remain unknown; no automatic normalization, serial fallback, or tolerance relaxation is permitted.

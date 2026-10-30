@@ -1,20 +1,7 @@
-# Silicon — Manual vs PWTK Comparison
+# Historical silicon comparison archive
 
-Generated artefacts:
+The bundled outputs are historical QE 7.4.1-era artifacts. They are retained as evidence, not current-build qualification. Some manual/PWTK spectra disagree and their provenance is incomplete; the old comparison reassurance is not a valid numerical verdict.
 
-- `data/si_comparison.txt` — maximum absolute differences between manual and PWTK runs.
-- `data/si_benchmarks.txt` — wall-clock timings parsed from QE logs (seconds).
-- `data/fermi_consistency.csv` — SCF vs DOS Fermi levels and indirect gaps per workflow.
-- `plots/si_manual_vs_pwtk.png` — overlay of band structure, total DOS, and PDOS.
+Generate fresh results with `qe-apple-silicon-build workflow --qe-bin /absolute/path/bin --out-dir /absolute/path/new-run`. For PWTK add `--engine pwtk --pwtk /absolute/path/pwtk --tclsh /absolute/path/tclsh8.6`. Both engines use canonical identical settings and verified parent datasets.
 
-Recreate with:
-```sh
-cd /path/to/qe_macm4_build/cases/si/comparison
-python3 scripts/compare_runs.py
-```
-
-Notes:
-- Band energies align to machine precision; total/projected DOS traces agree up to
-  the smearing tolerance used by `dos.x` (ΔE = 0.02 eV).
-- Energy axes in all plots are referenced to the DOS-derived Fermi level (E = 0).
-- QE runtimes are not captured in current logs; add `/usr/bin/time` wrappers if you need benchmarking.
+Use `qe-apple-silicon-build compare --manual /absolute/path/new-manual --pwtk /absolute/path/new-pwtk --out-dir /absolute/path/new-comparison`. Plots and summaries require an explicit fresh run with `dataset.json`; implicit bundled data is refused. See the repository README for curl installation and evidence handling.

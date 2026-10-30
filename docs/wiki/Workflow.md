@@ -1,35 +1,7 @@
 # Workflow
 
-## Install/update in one command
+Use the repository README's checksum-pinned curl manager installation. A reviewed remote release must exist before its URL can be used; the current implementation has not been published.
 
-Interactive:
+Build a new inactive QE suite with `install --backend openblas --blas-library /absolute/path/libopenblas.dylib`. Select its exact printed `bin` directory for `check` and `workflow --engine manual` or `workflow --engine pwtk`. Use a new external `--out-dir` for every attempt.
 
-```sh
-bash scripts/qe_manager.sh
-```
-
-Non-interactive install:
-
-```sh
-bash scripts/qe_manager.sh install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-```
-
-## Run migration check
-
-```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-## Manual silicon workflow
-
-```sh
-cd cases/si/manual
-../../../scripts/run_qe.sh pw.x -- -in data/Si.scf.in
-../../../scripts/run_qe.sh pw.x -- -in data/Si.bands.in
-../../../scripts/run_qe.sh bands.x -- -in data/Si.bands_post.in
-../../../scripts/run_qe.sh pw.x -- -in data/Si.nscf.in
-../../../scripts/run_qe.sh dos.x -- -in data/Si.dos.in
-../../../scripts/run_qe.sh projwfc.x -- -in data/Si.projwfc.in
-```
-
-For newcomer details, use `docs/Workflow_Basics.md`.
+The canonical order is SCF, bands and band postprocessing, uniform NSCF, DOS/PDOS, with explicit parents and artifact hashes. Analysis takes the fresh dataset manifest. Requested-rank PW/PH and one-managed-rank postprocessing define the current core layout. Never use historical bundled data to imply a new run passed.

@@ -1,36 +1,7 @@
-# Scripts Overview
+# Supported entrypoints
 
-Primary commands:
+`bin/qe-apple-silicon-build` dispatches the read-only prerequisite check `doctor`, install/update, check, smoke, workflow, convergence, upstream, activation/rollback, and read-only status. It resolves its installed symlink to the package root. Scientific verdicts use `scripts/qe_validation/` and Python's standard library.
 
-- `qe_manager.sh`
-  - Install/update QE toolchain and optionally run full validation.
-- `ci_migration_check.sh`
-  - Run smoke test + full validation in one command.
-- `publish_wiki.sh`
-  - Publish `docs/wiki/` pages to the GitHub wiki repository.
-- `publish_homebrew_tap.sh`
-  - Publish/update the Homebrew tap formula from a tagged release.
-- `publish_release_and_tap.sh`
-  - One-command publish for source release tag plus Homebrew tap update.
-- `validate_build.py`
-  - Full campaign generator (tables, plots, report).
-- `smoke_test.py`
-  - Fast SCF health check.
-- `run_qe.sh`
-  - MPI wrapper for QE executables.
+`install.sh` bootstraps the manager from a versioned release manifest and checksum-pinned curl archive. `package_release.py` creates a local reviewable archive; it does not publish it. Source fetch helpers verify pins and refuse replacement of existing source trees. Builds and calculations use external owned directories and retain failures.
 
-Setup helpers:
-
-- `setup/bootstrap.sh`
-  - Installs dependencies, fetches sources, builds binaries.
-- `setup/fetch_qe.sh`
-  - Download QE source archive by tag.
-- `setup/fetch_pwtk.sh`
-  - Download PWTK helper toolkit.
-
-Typical flow:
-
-```sh
-bash scripts/qe_manager.sh install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
+The historical Homebrew Formula/Brewfile/tap publisher are no longer supported and were removed from the current implementation. Their originals remain in the remediation baseline snapshot.

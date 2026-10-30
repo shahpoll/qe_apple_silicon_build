@@ -1,31 +1,5 @@
 # Troubleshooting
 
-Full guide: `docs/Troubleshooting.md`
+Preserve the failing case input, stdout/stderr, manifest and typed reason. Choose a new directory for a corrected attempt. Missing tools, reference hash mismatch, incomplete convergence, severe floating-point flags and failed dependencies remain non-PASS states. There is no serial fallback.
 
-## Common issues
-
-### LAXlib preprocessing errors
-
-Reconfigure with `CPP="gcc -E"`.
-
-### MPI socket/bind errors
-
-Run through `scripts/run_qe.sh` and set:
-
-```sh
-export QE_BINDING="--bind-to none"
-```
-
-### Missing post-processing binaries (`dos.x`, `projwfc.x`, `bands.x`)
-
-Rebuild using `scripts/qe_manager.sh install ...` or build PP tools explicitly.
-
-### Phonon regression suspicion
-
-Run:
-
-```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-and inspect `final_matrix.tsv`.
+Consult repository `docs/Troubleshooting.md` for typed diagnoses and `docs/implementation-status-2026-10-15.md` for current device-specific limits. Do not alter a reference or widen a tolerance to obtain green output.

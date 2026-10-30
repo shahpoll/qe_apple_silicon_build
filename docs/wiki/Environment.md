@@ -1,29 +1,5 @@
-# Environment Notes
+# Environment
 
-## Baseline
+The current profile requires native arm64 macOS, Apple Command Line Tools, Python 3.12+, curl, git, CMake, gfortran, coherent mpicc/mpif90/mpirun and an explicitly selected existing OpenBLAS library. No Homebrew invocation is required. Numerical verdicts use Python's standard library; plotting dependencies are optional.
 
-- Machine class: Apple Silicon (validated on Mac mini M4)
-- OS baseline: macOS 26
-- QE baseline: 7.5
-
-## Toolchain (via `Brewfile`)
-
-- `gcc`
-- `open-mpi`
-- `cmake`
-- `veclibfort`
-- `openblas`
-- `python`
-- `tcl-tk@8`
-
-Install in one step:
-
-```sh
-brew bundle
-```
-
-## Important runtime notes
-
-- Use `CPP="gcc -E"` in configure builds (handled by bootstrap scripts).
-- QE on Apple Silicon here is CPU-only (no Metal backend).
-- Prefer `OMP_NUM_THREADS=1` unless intentionally benchmarking hybrid MPI/OpenMP.
+The local October evidence covers Apple M4, 16 GiB RAM and macOS 26.3 only. Other devices, OS/toolchain versions and execution layouts need requalification. See repository `docs/implementation-status-2026-10-15.md` for exact evidence.

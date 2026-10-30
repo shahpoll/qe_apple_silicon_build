@@ -9,17 +9,17 @@
     {
       "name": "openblas-release",
       "displayName": "OpenBLAS Release",
-      "description": "Build QE with OpenBLAS (Homebrew) and OpenMPI",
+      "description": "Build QE with an existing explicit OpenBLAS library and MPI toolchain",
       "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build/openblas-release",
       "cacheVariables": {
         "QE_ENABLE_MPI": "ON",
-        "QE_ENABLE_OPENMP": "ON",
+        "QE_ENABLE_OPENMP": "OFF",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_Fortran_COMPILER": "mpif90",
         "CMAKE_C_COMPILER": "mpicc",
-        "BLAS_LIBRARIES": "$(brew --prefix openblas)/lib/libopenblas.dylib",
-        "LAPACK_LIBRARIES": "$(brew --prefix openblas)/lib/libopenblas.dylib"
+        "BLAS_LIBRARIES": "$env{QE_BLAS_LIBRARY}",
+        "LAPACK_LIBRARIES": "$env{QE_BLAS_LIBRARY}"
       }
     }
   ]

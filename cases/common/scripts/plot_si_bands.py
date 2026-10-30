@@ -12,6 +12,9 @@ The script emits plots/si_band_structure.png under the chosen base.
 from __future__ import annotations
 
 import pathlib
+import sys
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[3]/"scripts"))
+from qe_validation.analysis import dataset
 from dataclasses import dataclass
 from typing import List, Sequence, Tuple
 
@@ -24,7 +27,8 @@ PT_BASE = ROOT / "cases" / "si" / "pwtk"
 
 
 def compute_paths(base: pathlib.Path | None) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path, pathlib.Path]:
-    base_dir = DEFAULT_BASE if base is None else base
+    dataset(base)
+    base_dir = base
     data = base_dir / "data" / "silicon.bands.dat.gnu"
     log = base_dir / "logs" / "si_bands_post.txt"
     dos = base_dir / "data" / "silicon.dos"
@@ -33,9 +37,9 @@ def compute_paths(base: pathlib.Path | None) -> tuple[pathlib.Path, pathlib.Path
 
 
 def workflow_label(base: pathlib.Path) -> str:
-    if base.samefile(DEFAULT_BASE):
+    if base.resolve() == DEFAULT_BASE.resolve():
         return "Manual QE workflow (Accelerate, M4)"
-    if base.samefile(PT_BASE):
+    if base.resolve() == PT_BASE.resolve():
         return "PWTK-driven QE workflow (Accelerate, M4)"
     return f"Custom run: {base}"
 
@@ -105,7 +109,8 @@ def extract_symmetry_points(path: pathlib.Path) -> Sequence[Tuple[str, float]]:
 
 def main(base: pathlib.Path | None = None) -> None:
     data_file, log_file, dos_file, out_png = compute_paths(base)
-    base_dir = DEFAULT_BASE if base is None else base
+    dataset(base)
+    base_dir = base
     if not data_file.exists():
         raise SystemExit(f"Band data not found: {data_file}")
 

@@ -1,0 +1,39 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tooling-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tooling:
+    name: Tooling / Python ${{ matrix.python }}
+    runs-on: macos-26
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.12', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Check shell syntax
+        run: |
+          bash -n install.sh
+          bash -n bin/qe-apple-silicon-build
+      - name: Run tooling and installer regression tests
+        run: |
+          set -o pipefail
+          python -B -m unittest discover -s tests -v 2>&1 | tee tooling-tests.log
+      - name: Preserve test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tooling-python-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tooling-tests.log

@@ -1,85 +1,11 @@
-# Release Checklist
+# Release qualification
 
-Use this before pushing to GitHub.
+1. Preserve the baseline, working diff, source hashes and all failed attempts. Do not change remotes, reset user changes or publish automatically.
+2. Run the adversarial harness and affected live numerical contracts on an inactive, identified suite. Record exact tools, inputs, references, ranks and limits.
+3. Keep the installer's default manifest URL aligned with the intended release tag. Build the manager archive with `python3 scripts/package_release.py --out-dir /absolute/path/new-package`. Install it using the checksum-pinned curl bootstrap in isolated paths, including spaces/Unicode. Verify every CLI dispatch and real numerical use.
+4. Verify checksum/conflict rejection, activation scope, locks, dependency drift and rollback in a dedicated test prefix. Keep production suites inactive until their matching complete qualification passes.
+5. Obtain independent code-and-evidence review. A comprehensive workstation release requires all mandatory numerical cases and accepted review; core qualification is a narrower milestone.
+6. Check that documentation reports failed, blocked and untested capabilities. Verify archive hashes and actual uploaded contents before announcing a remote installer URL.
+7. Commit, push, tag, publish or sync a wiki only under the user's publication authorization. The v2.0.0-rc.1 manager is a preview; publishing it does not close the comprehensive qualification gates.
 
-## 0) Repository identity
-
-- Canonical name: `qe_apple_silicon_build`
-- If local remote still points to old repo name:
-
-```sh
-git remote set-url origin git@github.com:shahpoll/qe_apple_silicon_build.git
-```
-
-## 1) Sync and branch
-
-```sh
-git pull --rebase origin main
-git switch -c codex/release-<topic>
-git status --short
-```
-
-## 2) Confirm core paths
-
-```sh
-ls "$HOME/opt/qe-7.5/bin/pw.x"
-ls cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF
-```
-
-## 3) Run checks
-
-Smoke:
-
-```sh
-python3 scripts/smoke_test.py --ranks 2
-```
-
-CI-style migration validation:
-
-```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-Confirm summary matrix:
-
-```sh
-cat validation_reports/ci_migration_check/tables/final_matrix.tsv
-```
-
-## 4) Review and stage
-
-```sh
-git add README.md docs/ scripts/ Formula/ bin/ .github/
-git diff --staged
-```
-
-## 5) Commit and push
-
-```sh
-git commit -m "Polish docs and tooling for newcomer-first QE workflow"
-git push -u origin codex/release-<topic>
-```
-
-## 6) PR checklist
-
-Include in PR body:
-
-- what changed (docs/scripts/layout)
-- validation summary (`PASS/FAIL/TOTAL`)
-- path to validation report (`validation_reports/.../VALIDATION_REPORT.md`)
-
-## 7) Publish Homebrew tap formula (optional release step)
-
-After tagging and pushing a release tag:
-
-```sh
-bash scripts/publish_homebrew_tap.sh --version v1.2.0
-```
-
-Details and naming options are documented in `docs/Homebrew_Tap.md`.
-
-Or use the one-shot publisher:
-
-```sh
-bash scripts/publish_release_and_tap.sh --version v1.2.0
-```
+See [current device status](VALIDATION.md) and the [work ledger](https://github.com/shahpoll/qe_apple_silicon_build/blob/main/docs/implementation-plan/WORK_LEDGER.md).

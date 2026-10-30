@@ -1,56 +1,48 @@
-name: QE Migration Check
-
+name: QE curl build and numerical checks
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'README.md'
-      - 'scripts/**'
-      - 'bin/**'
-      - 'Formula/**'
-      - 'docs/**'
-      - 'cases/**'
-      - 'inputs/**'
-      - 'CHANGELOG.md'
-      - 'CITATION.cff'
-      - '.github/workflows/migration-check.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'scripts/**'
-      - 'bin/**'
-      - 'Formula/**'
-      - 'cases/**'
-      - 'inputs/**'
-
+permissions:
+  contents: read
+concurrency:
+  group: qe-device-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  validate-migration:
-    # Use self-hosted Apple Silicon runner to match local migration target (macOS 26).
+  qualify:
     runs-on: [self-hosted, macOS, ARM64]
-
+    env:
+      QE_RUN_TOKEN: ${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build or update QE toolchain
+      - uses: actions/checkout@v4
+      - name: Harness regression assertions
+        run: python3 -B -m unittest discover -s tests -v
+      - name: Clean inactive build with existing tools
         run: |
-          bash scripts/qe_manager.sh update \
-            --qe-tag qe-7.5 \
-            --install-prefix "$HOME/opt/qe-7.5" \
-            --skip-validate
-
-      - name: Run CI migration check
+          python3 scripts/install_qe.py --backend openblas \
+            --blas-library "$QE_BLAS_LIBRARY" --jobs 2 --profile core \
+            --install-prefix "$RUNNER_TEMP/qe-${{ env.QE_RUN_TOKEN }}" \
+            --out-dir "$RUNNER_TEMP/qe-build-${{ env.QE_RUN_TOKEN }}"
+      - name: Numerical qualification
         run: |
-          bash scripts/ci_migration_check.sh \
-            --qe-bin "$HOME/opt/qe-7.5/bin" \
-            --out-dir "validation_reports/ci_${{ github.run_id }}"
-
-      - name: Upload validation artifacts
+          SUITE=$(python3 -c 'import json,os; p=os.environ["RUNNER_TEMP"]+"/qe-build-${{ env.QE_RUN_TOKEN }}/candidate.json"; print(json.load(open(p))["path"]+"/bin")')
+          python3 scripts/validate_build.py --qe-bin "$SUITE" \
+            --out-dir "$RUNNER_TEMP/qe-check-${{ env.QE_RUN_TOKEN }}"
+      - name: Retain successes and failures
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qe-migration-validation-${{ github.run_id }}
+          name: qe-evidence-${{ env.QE_RUN_TOKEN }}
           path: |
-            validation_reports/ci_${{ github.run_id }}/VALIDATION_REPORT.md
-            validation_reports/ci_${{ github.run_id }}/tables/
-            validation_reports/ci_${{ github.run_id }}/plots/
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/cases/
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/*.json
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/*.jsonl
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/*.md
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/source/
+            ${{ runner.temp }}/qe-build-${{ env.QE_RUN_TOKEN }}/work/suite-manifest.json
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/cases/
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/*.json
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/*.jsonl
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/*.md
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/inputs/
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/data/
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/source/
+            ${{ runner.temp }}/qe-check-${{ env.QE_RUN_TOKEN }}/work/suite-manifest.json

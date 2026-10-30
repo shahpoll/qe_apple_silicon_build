@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "id": "upstream-qe75-silicon-nc",
+  "source_archive_sha256": "7e1f7a9a21b63192f5135218bee20a5321b66582e4756536681b76e9c59b3cc8",
+  "source_url": "https://gitlab.com/QEF/q-e/-/archive/qe-7.5/q-e-qe-7.5.tar.gz",
+  "upf_origin": "EPW/examples/sic/pp/Si.pz-vbc.UPF in that authenticated archive",
+  "upf_md5_matches_reference": true,
+  "input": "fixtures/upstream-qe75/pw_scf/scf.in",
+  "reference": "fixtures/upstream-qe75/pw_scf/benchmark.out.git.inp=scf.in",
+  "pseudopotential": "fixtures/upstream-qe75/pw_scf/Si.pz-vbc.UPF",
+  "hashes": {
+    "scf.in": "801a5932eb8a49bda647afce06305b7d5dabda208cee17a35bb996a6ea4f0483",
+    "benchmark.out.git.inp=scf.in": "16e52c2ba418e0337978952cf1f7fdd1bd42648557c6156fe86025963749a13c",
+    "Si.pz-vbc.UPF": "d75dd6b0be0aa10587fc95900cfd6ba7314d461a8276a81df34f009d0bfc075d"
+  },
+  "metrics": {
+    "total_energy_ry": {
+      "value": -15.79449593,
+      "atol": 0.0008,
+      "rtol": 0.0001,
+      "units": "Ry/cell",
+      "rationale": "Pinned upstream userconfig.tmp PW e1 absolute/relative regression tolerances"
+    },
+    "electrons": {
+      "value": 8.0,
+      "atol": 1e-08,
+      "rtol": 0.0,
+      "units": "electrons/cell",
+      "rationale": "Explicit two-atom four-valence silicon fixture"
+    }
+  },
+  "reference_status": "UPSTREAM_BENCHMARK",
+  "reference_output_version": "QE 6.1 benchmark preserved in official QE 7.5 source; exact independent historical UPF identity"
+}

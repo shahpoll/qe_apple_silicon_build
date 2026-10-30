@@ -1,0 +1,70 @@
+{
+  "kind": "synthetic fault injection",
+  "results": [
+    {
+      "probe": "nonfinite_numbers",
+      "smoke_exit_code": 0,
+      "false_acceptance_reproduced": true,
+      "output": "{\n  \"total_energy\": NaN,\n  \"fermi\": NaN,\n  \"pw_bin\": \"/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-u6jytocu/pw.x\",\n  \"ranks\": 4,\n  \"mode\": \"mpi\"\n}\n",
+      "stderr": "",
+      "calls": [
+        {
+          "command": [
+            "/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-u6jytocu/run_qe.sh",
+            "pw.x",
+            "--",
+            "-in",
+            "Si.scf.in"
+          ],
+          "explicit_env": true
+        }
+      ]
+    },
+    {
+      "probe": "missing_completion_and_convergence",
+      "smoke_exit_code": 0,
+      "false_acceptance_reproduced": true,
+      "output": "{\n  \"total_energy\": -22.83927,\n  \"fermi\": 6.4346,\n  \"pw_bin\": \"/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-mzzu_xiv/pw.x\",\n  \"ranks\": 4,\n  \"mode\": \"mpi\"\n}\n",
+      "stderr": "",
+      "calls": [
+        {
+          "command": [
+            "/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-mzzu_xiv/run_qe.sh",
+            "pw.x",
+            "--",
+            "-in",
+            "Si.scf.in"
+          ],
+          "explicit_env": true
+        }
+      ]
+    },
+    {
+      "probe": "failed_mpi_values_reused_for_empty_serial_attempt",
+      "smoke_exit_code": 0,
+      "false_acceptance_reproduced": true,
+      "output": "{\n  \"total_energy\": -22.83927,\n  \"fermi\": 6.4346,\n  \"pw_bin\": \"/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-jt4psm2f/pw.x\",\n  \"ranks\": 4,\n  \"mode\": \"serial_fallback\"\n}\n",
+      "stderr": "",
+      "calls": [
+        {
+          "command": [
+            "/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-jt4psm2f/run_qe.sh",
+            "pw.x",
+            "--",
+            "-in",
+            "Si.scf.in"
+          ],
+          "explicit_env": true
+        },
+        {
+          "command": [
+            "/var/folders/c3/vb3g7k014zv5qbz60d_ptb6m0000gn/T/qe-smoke-audit-jt4psm2f/pw.x",
+            "-in",
+            "Si.scf.in"
+          ],
+          "explicit_env": false
+        }
+      ]
+    }
+  ]
+}

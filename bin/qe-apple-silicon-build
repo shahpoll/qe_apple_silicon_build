@@ -1,56 +1,38 @@
 #!/usr/bin/env bash
-# Unified CLI entrypoint for QE Apple Silicon build/install/check workflows.
 set -euo pipefail
-
-SELF_DIR=$(cd -- "$(dirname "$0")" && pwd)
-ROOT_DIR=$(cd -- "$SELF_DIR/.." && pwd)
-MANAGER="$ROOT_DIR/scripts/qe_manager.sh"
-CI_CHECK="$ROOT_DIR/scripts/ci_migration_check.sh"
-SMOKE="$ROOT_DIR/scripts/smoke_test.py"
-
-usage() {
-  cat <<'USAGE'
-Usage:
-  qe-apple-silicon-build <command> [options]
-
-Commands:
-  install      Install QE build (delegates to scripts/qe_manager.sh install)
-  update       Update QE build (delegates to scripts/qe_manager.sh update)
-  menu         Interactive install/update flow
-  check        Run CI-style migration check
-  smoke        Run smoke test
-  help         Show help
-
-Examples:
-  qe-apple-silicon-build install --qe-tag qe-7.5 --install-prefix "$HOME/opt/qe-7.5"
-  qe-apple-silicon-build update --qe-tag qe-7.5 --with-pwtk
-  qe-apple-silicon-build check --qe-bin "$HOME/opt/qe-7.5/bin"
-USAGE
-}
-
-if [[ $# -lt 1 ]]; then
-  exec "$MANAGER" menu
-fi
-
-cmd="$1"
-shift || true
-
+SOURCE="$0"
+while [[ -L "$SOURCE" ]]; do
+  DIR=$(cd -P -- "$(dirname "$SOURCE")" && pwd)
+  SOURCE=$(readlink "$SOURCE")
+  [[ "$SOURCE" = /* ]] || SOURCE="$DIR/$SOURCE"
+done
+ROOT_DIR=$(cd -P -- "$(dirname "$SOURCE")/.." && pwd)
+PYTHON="${QE_PYTHON:-python3}"
+export PYTHONDONTWRITEBYTECODE=1
+cmd="${1:-help}"
+[[ $# -eq 0 ]] || shift
 case "$cmd" in
-  install|update|menu)
-    exec "$MANAGER" "$cmd" "$@"
-    ;;
-  check|ci-check|validate)
-    exec "$CI_CHECK" "$@"
-    ;;
-  smoke)
-    exec python3 "$SMOKE" "$@"
-    ;;
+  doctor) exec "$PYTHON" "$ROOT_DIR/scripts/doctor.py" "$@" ;;
+  install|update) exec "$PYTHON" "$ROOT_DIR/scripts/install_qe.py" "$@" ;;
+  check|validate) exec "$PYTHON" "$ROOT_DIR/scripts/validate_build.py" "$@" ;;
+  activate|rollback) exec "$PYTHON" "$ROOT_DIR/scripts/activate_qe.py" "$@" ;;
+  status) exec "$PYTHON" "$ROOT_DIR/scripts/status.py" "$@" ;;
+  smoke) exec "$PYTHON" "$ROOT_DIR/scripts/smoke_test.py" "$@" ;;
+  compare) exec "$PYTHON" "$ROOT_DIR/scripts/compare_runs.py" "$@" ;;
+  physical) exec "$PYTHON" "$ROOT_DIR/scripts/physical_checks.py" "$@" ;;
+  examples) exec "$PYTHON" "$ROOT_DIR/scripts/example_validation.py" "$@" ;;
+  davidson) exec "$PYTHON" "$ROOT_DIR/scripts/davidson_validation.py" "$@" ;;
+  workflow) exec "$PYTHON" "$ROOT_DIR/scripts/workflow.py" "$@" ;;
+  convergence) exec "$PYTHON" "$ROOT_DIR/cases/si/convergence/run_convergence.py" "$@" ;;
+  upstream) exec "$PYTHON" "$ROOT_DIR/scripts/upstream_validation.py" "$@" ;;
   help|-h|--help)
-    usage
+    cat <<'EOF'
+Usage: qe-apple-silicon-build <doctor|install|update|check|smoke|workflow|compare|physical|examples|davidson|convergence|upstream|activate|rollback|status> [options]
+Install/update uses curl and existing tools; no Homebrew is required or invoked.
+Every run retains separate logs and typed results outside the installed package.
+Use '<command> --help' for exact options. Installation candidates remain inactive
+unless --activate is explicitly selected after the declared qualification passes.
+EOF
     ;;
-  *)
-    echo "Unknown command: $cmd" >&2
-    usage
-    exit 1
-    ;;
+  *) echo "Unknown command: $cmd" >&2; exit 2 ;;
 esac

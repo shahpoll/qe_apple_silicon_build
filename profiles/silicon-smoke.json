@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "silicon-scf-pbe-uspp",
+  "reference_status": "HISTORICAL_REGRESSION_SEED_NOT_INDEPENDENT_PHYSICS_QUALIFICATION",
+  "provenance": "September 30 preserved converged actual 1/2/4-rank logs; independent upstream cases are required for broader qualification",
+  "input": "inputs/Si.scf.in",
+  "input_sha256": "f16c530eb4517d42ed47f207ea5f69e571ea7039b9600145f1b21e6a1120c931",
+  "pseudopotential": "cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF",
+  "pseudopotential_sha256": "669fb75395a9d26973b0ea1ce8223bbcb30d3396c5d48bf5e794d1243c52375a",
+  "metrics": {
+    "total_energy_ry": {
+      "value": -22.83927198,
+      "atol": 0.001,
+      "units": "Ry/cell",
+      "rationale": "Existing regression limit retained; not production accuracy"
+    },
+    "fermi_ev": {
+      "value": 6.4346,
+      "atol": 0.005,
+      "units": "eV",
+      "rationale": "Existing regression limit retained"
+    },
+    "electrons": {
+      "value": 8.0,
+      "atol": 1e-08,
+      "units": "electrons/cell",
+      "rationale": "Two silicon atoms with four valence electrons each"
+    }
+  },
+  "peer_limits": {
+    "total_energy_ry": 1e-07,
+    "fermi_ev": 0.0001
+  },
+  "peer_limit_rationale": "Printed precision and prior actual-rank evidence; fixed before current candidate runs"
+}

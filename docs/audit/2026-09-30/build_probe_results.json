@@ -1,0 +1,46 @@
+{
+  "purpose": "Defect characterization; true means defect reproduced",
+  "probes": [
+    {
+      "id": "homebrew_symlink_root",
+      "reproduced": true,
+      "help_exit": 0,
+      "install_help_exit": 1,
+      "stderr": "<temporary-directory>/prefix/bin/qe-apple-silicon-build: line 40: <temporary-directory>/prefix/scripts/qe_manager.sh: No such file or directory"
+    },
+    {
+      "id": "application_failure_masked_by_retry",
+      "reproduced": true,
+      "exit": 0,
+      "stdout": "SECOND ATTEMPT SUCCESS",
+      "stderr": "[run_qe] Using 2 MPI ranks, OMP_NUM_THREADS=1\n[run_qe] Binding args: --map-by ppr:1:core --bind-to core \n[run_qe] Executable: <temporary-directory>/fakebin/pw.x\nAPPLICATION FAILED: numerical error\n[run_qe] hwloc rejected core binding; retrying with --bind-to none"
+    },
+    {
+      "id": "explicit_binary_directory_silently_falls_back",
+      "reproduced": true,
+      "exit": 0,
+      "stderr": "[run_qe] Using 2 MPI ranks, OMP_NUM_THREADS=1\n[run_qe] Binding args: --map-by ppr:1:core --bind-to core \n[run_qe] Executable: <temporary-directory>/wrapper/artifacts/q-e-qe-7.5/bin/pw.x"
+    },
+    {
+      "id": "cmake_preset_literal_shell_substitution",
+      "reproduced": true,
+      "exit": 0,
+      "observed": [
+        "-- AUDIT_BLAS=$(brew --prefix openblas)/lib/libopenblas.dylib"
+      ]
+    },
+    {
+      "id": "missing_dylib_linkage_false_pass",
+      "reproduced": true,
+      "deleted_dependency_exists": false,
+      "checker_pass": true,
+      "log": "Checked 1 executables.\nNo missing dynamic libraries detected."
+    },
+    {
+      "id": "undeclared_python_validation_dependencies",
+      "reproduced": true,
+      "exit": 1,
+      "error": "ModuleNotFoundError: No module named 'matplotlib'"
+    }
+  ]
+}

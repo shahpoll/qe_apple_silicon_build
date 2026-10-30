@@ -1,85 +1,17 @@
 # Troubleshooting
 
-Baseline target: QE 7.5 on Apple Silicon (macOS 26).
+For setup problems, run `qe-apple-silicon-build doctor --blas-library /path/to/libopenblas.dylib` and follow the [installation guide](INSTALL.md). If the shell cannot find the command, add `~/.local/bin` to PATH.
 
-## Build-time errors
+Inspect the new run's `VALIDATION_REPORT.md`, `summary.json`, failing case `failure.json`, input and raw stdout/stderr. Preserve the attempt and choose a new output directory for a correction.
 
-### `make[1]: laxlib*.fh ... no input files`
+- `PREREQUISITE_MISSING` / `BLAS_PATH_REQUIRED`: provide the existing native compiler/MPI tools and an explicit OpenBLAS dylib. The installer does not install or update a package manager.
+- `OUTPUT_EXISTS` / `OUTPUT_PROTECTED`: select a new external run directory. Do not delete another run to satisfy the check.
+- MPI socket/binding error: inspect launcher evidence and host permissions. The default is `--bind-to none`. A serial diagnostic cannot replace required MPI proof.
+- `PSEUDOPOTENTIAL_IDENTITY`: recover the exact authenticated reference UPF. A current file with the same name may have different contents. Do not loosen the identity check.
+- `FLOATING_POINT_EXCEPTION`: preserve the flag and diagnose that layout/build. Current core postprocessing uses one managed MPI rank; two-rank BANDS remains unqualified on this device.
+- `OPTIMIZATION_NOT_CONVERGED`: electronic completion alone does not establish ionic/cell convergence. The supported parser requires explicit BFGS or damped-minimization convergence.
+- Missing DOS/PDOS parent or coverage: run the canonical workflow. It processes bands first, then uniform NSCF with the required 36 bands before DOS/PDOS.
+- `DEPENDENCY_DRIFT` / `PLATFORM_DRIFT`: requalify after the external library/OS change. Pointer rollback does not roll back shared tools or macOS.
+- `QUALIFICATION_SCOPE`: core and seed reports cannot authorize a comprehensive workstation activation. Missing mandatory cases and review stay blocked.
 
-Cause: preprocessor mismatch with Apple CLT defaults.
-
-Fix:
-
-- rerun configure with `CPP="gcc -E"`
-- or use `scripts/setup/bootstrap.sh --build-accelerate` (already configured for this)
-
-### `wxml.f90: DP_XML has no implicit type`
-
-Cause: FoX XML mismatch in alternative build paths.
-
-Fix options:
-
-- configure with FoX support (`--with-fox=yes` or equivalent)
-- use the default Accelerate build path from this repo
-
-## Runtime issues
-
-### MPI bind/socket errors (`PRTE ERROR`, `bind() failed`)
-
-Cause: restrictive affinity/network behavior on macOS in some environments.
-
-Fix:
-
-- run via `scripts/run_qe.sh` (it has binding fallback)
-- explicitly set: `export QE_BINDING="--bind-to none"`
-- for quick checks use low ranks (`QE_RANKS=2`)
-
-### Phonon instability on older builds
-
-QE 7.4.1 showed instability on this machine after OS upgrade.
-QE 7.5 resolved the issue in validation campaigns.
-
-Run:
-
-```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
-
-and confirm `ph_grid`, `q2r_ifc`, `matdyn_gamma` pass in `final_matrix.tsv`.
-
-### `projwfc.x` or `dos.x` not found
-
-Cause: partial QE build.
-
-Fix:
-
-- rebuild with `scripts/qe_manager.sh install ...`
-- or ensure `make -C PP/src bands.x dos.x projwfc.x pp.x pw2wannier90.x` has run
-
-### Pseudopotential not found
-
-Expected path in this repo: `cases/common/pp/`.
-
-Check:
-
-```sh
-ls cases/common/pp/Si.pbe-n-rrkjus_psl.1.0.0.UPF
-```
-
-## Physics/analysis confusion
-
-### SCF Fermi vs DOS Fermi are different
-
-This is expected with denser NSCF mesh + smearing. Compare trends, not strict equality.
-
-### GPU acceleration on Apple Silicon
-
-Not available in QE mainline for Metal. Treat all workflows here as CPU-only.
-
-## Last resort check
-
-Run the full migration validator and inspect report + plots:
-
-```sh
-bash scripts/ci_migration_check.sh --qe-bin "$HOME/opt/qe-7.5/bin"
-```
+SCF and DOS Fermi values use different sampling here and have separate fixed regression references. Their difference is not evidence that arbitrary grids or normalization are interchangeable. See [device status](VALIDATION.md) for unresolved backend, reference and scientific limits.
